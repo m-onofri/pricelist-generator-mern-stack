@@ -1,49 +1,47 @@
-import React, { Component } from 'react';
-import { Route, NavLink, BrowserRouter as Router } from 'react-router-dom';
+import React, { useEffect } from 'react';
+import { Route, Switch, NavLink, BrowserRouter as Router } from 'react-router-dom';
+import LandingPage from './LandingPage';
+import Register from './auth/Register';
+import Login from './auth/Login';
+import Alert from './Alert';
+import Navbar from './Navbar';
 import MainApp from './MainApp';
+import PrivateRoute from './routing/PrivateRoute';
 import Admin from './Admin';
 import './App.css';
+//Redux
+import { Provider } from 'react-redux';
+import store from '../store';
+import { loadUser } from '../actions/auth';
+import setAuthToken from '../utils/setAuthToken';
 
-class App extends Component {
-    state = {
-        data: {},
-        loaded: false
-    }
-    
-    componentDidMount() {
-        fetch("http://localhost:9000/priceList")
-            .then(res => res.json())
-            .then(data => {
-                this.setState({
-                data,
-                loaded: true
-            });
-        });
-    }
 
-    render() {
-        const {loaded, data} = this.state;
-        if (loaded) {
-            return(
-                <Router>
-                    <div>
-                        <div className="nav" >
-                            <NavLink exact activeClassName="active" className="link" to="/">Price Generator</NavLink>
-                            <NavLink activeClassName="active" className="link" to="/admin">Admin Page</NavLink>
-                        </div>
-                        <Route exact path="/" render={() =>  <MainApp data={data} />} />
-                        <Route path="/admin" render={(props) => <Admin
-                                                                    match={props.match}
-                                                                    data={data}             
-                                                                />} />
-                    </div>
-                </Router>
-            );
-        } else {
-            return "Wait...";
-        }   
-        
-    }
+if (localStorage.token) {
+    setAuthToken(localStorage.token);
+}
+
+const App = () => {
+    useEffect(() => {
+        store.dispatch(loadUser());
+    }, []);
+
+    return(
+        <Provider store={store}>
+            <Router>
+            <div>
+                <Navbar />
+                <Route exact path="/" component={LandingPage} />
+                <Alert />
+                <Switch>
+                    <Route exact path="/register" component={Register} />
+                    <Route exact path="/login" component={Login} />
+                    <PrivateRoute exact path="/app" component={MainApp} />
+                    <PrivateRoute exact path="/admin" component= {Admin}/>
+                </Switch>
+            </div>
+        </Router>
+        </Provider>
+    )    
 }
 
 export default App;

@@ -1,4 +1,7 @@
 import React, {Component} from 'react';
+import {connect} from 'react-redux';
+import {createPricelist, getCurrentPricelist} from '../../actions/pricelist';
+import {register} from '../../actions/auth';
 import Periods from './Periods';
 
 class AdminCreate extends Component {
@@ -37,17 +40,17 @@ class AdminCreate extends Component {
             const periodName = String.fromCharCode(97 + j);
             priceList.push([periodName, {
                 name: name,
-                period: periodName,
+                periodName: periodName,
                 start: todayString,
                 end: todayString,
-                ad: 0,
-                ad34: 0,
-                chd3: 0,
-                chd4: 0,
-                inf: 0,
-                animal: 5,
-                culla: 10,
-                sing: 15}]);
+                ad: "0",
+                ad34: "0",
+                chd3: "0",
+                chd4: "0",
+                inf: "0",
+                animal: "5",
+                culla: "10",
+                sing: "14"}]);
         }
         this.setState({priceList});
     }
@@ -59,42 +62,19 @@ class AdminCreate extends Component {
         const value = event.target.value;
         for(let i=0; i < priceList.length; i++) {
             if (priceList[i][0] === section) {
-                priceList[i][1][id] = value;
+                priceList[i][1][id] = value.toString();
             }
         }
         this.setState({priceList});
     }
 
-    submitHandler = () => {
-        this.setState({
-            loaded: false,
-          });
-        
-        fetch('http://localhost:9000/priceList/createPriceList', {
-            method: 'POST',
-            headers: {'Content-Type': 'application/json'},
-            body: JSON.stringify({priceList: JSON.stringify(this.state.priceList)})
-        })
-        .then(res => res.json())
-        .then(json => {
-            if (json.success) {
-                this.setState({
-                    success: true,
-                    message: json.message,
-                    loaded: true
-                });
-            } else {
-                this.setState({
-                    success: false,  
-                    message: json.message,
-                    loaded: true,
-                });
-            }
-        });
+    submitHandler = e => {
+        e.preventDefault();
+        this.props.createPricelist(this.state.priceList);
     }
 
     displayFeedback = () => {
-        const {message, success} = this.state;
+        const {message, success} = this.props.message;
         if (message) {
             return (
                 <div className={success ? "success" : "error"}>
@@ -146,7 +126,10 @@ class AdminCreate extends Component {
                             );
                      })}
                     </div>
-                    <button className="btn btn-add createNewPlaylist" onClick={this.submitHandler}>Add</button>
+                    <form onSubmit={(e) => this.submitHandler(e)}>
+                        <input type="submit" className="btn btn-add createNewPlaylist" value={"Go!"}/>
+                    </form>
+                    
                 </div>
             );  
         } else {
@@ -156,4 +139,8 @@ class AdminCreate extends Component {
     }
 }
 
-export default AdminCreate;
+const mapStateToProps = state => ({
+    message: state.pricelist.message
+});
+
+export default connect(mapStateToProps, {createPricelist, getCurrentPricelist, register})(AdminCreate);

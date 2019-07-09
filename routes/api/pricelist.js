@@ -27,7 +27,7 @@ router.get('/', auth, async (req, res) => {
 //@route POST api/pricelist/
 //@desc Create a new pricelist
 //@access Private
-router.post('/', [auth, [
+router.post('/create', [auth, [
     check('priceList.*[1].name', 'Name is required').not().isEmpty(),
     check('priceList.*[1].periodName', 'Period is required').not().isEmpty(),
     check('priceList.*[1].start', 'Start date is required').not().isEmpty(),

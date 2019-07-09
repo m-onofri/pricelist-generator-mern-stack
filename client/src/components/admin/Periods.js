@@ -4,7 +4,7 @@ const Periods = ({index, data, addNewValuesHandler}) => {
     return (
         <div className="periods" id={`period-${index}`}>
             <input type="text" name="name" value={data.name} onChange={addNewValuesHandler}/>
-            <input type="text" name="period" value={data.period} onChange={addNewValuesHandler} />
+            <input type="text" name="periodName" value={data.periodName} onChange={addNewValuesHandler} />
             <input type="date" name="start" value={data.start} onChange={addNewValuesHandler}/>
             <input type="date"  name="end" value={data.end} onChange={addNewValuesHandler}/>
             <input type="number" name="ad" step="0.01" value={data.ad} onChange={addNewValuesHandler}/>

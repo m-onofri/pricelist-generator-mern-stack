@@ -1,10 +1,12 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { Route, NavLink, BrowserRouter as Router } from 'react-router-dom';
+import { connect } from 'react-redux';
 import AdminCreate from './admin/AdminCreate';
 import AdminUpdate from './admin/AdminUpdate';
+import {getCurrentPricelist} from '../actions/pricelist';
 
-const Admin = ({data}) => 
+const Admin = ({admin}) => 
     
     <Router>
         <div>
@@ -14,7 +16,7 @@ const Admin = ({data}) =>
                     <NavLink activeClassName="active-bis" className="link-bis" to="/admin/create">Create Price Lists</NavLink>
                 </div>
             </div>
-            <Route exact path="/admin" render={() =>  <AdminUpdate data={data} />}  />
+            <Route exact path="/admin" render={() =>  <AdminUpdate data={admin.pricelist} />}  />
             <Route path="/admin/create" component={AdminCreate} />
         </div>
     </Router>   
@@ -24,4 +26,8 @@ Admin.propTypes = {
     data: PropTypes.object.isRequired  
 }
 
-export default Admin;
+const mapStateToProps = state => ({
+   admin: state.pricelist
+});
+
+export default connect(mapStateToProps, { getCurrentPricelist })(Admin);

@@ -1,10 +1,11 @@
 import React, {useState} from 'react';
 import { connect } from 'react-redux';
-import { Link } from 'react-router-dom';
+import { Link, Redirect } from 'react-router-dom';
 import { setAlert } from '../../actions/alert';
+import { register } from '../../actions/auth';
 //import PropTypes from 'prop-types';
 
-const Register = (props) => {
+const Register = ({setAlert, register, isAuthenticated}) => {
     const [formData, setFormData] = useState({
         name: "",
         email: "",
@@ -19,10 +20,14 @@ const Register = (props) => {
     const onSubmit = e => {
         e.preventDefault();
         if (password !== password2) {
-            props.setAlert('Passwords do not match', 'danger');
+            setAlert('Passwords do not match', 'danger');
         } else {
-            console.log(formData);
+            register({ name, email, password });
         }
+    }
+
+    if (isAuthenticated) {
+        return <Redirect to="/app" />
     }
 
     return (
@@ -35,7 +40,7 @@ const Register = (props) => {
                     name="name"
                     value={name} 
                     onChange={e => onChange(e)} 
-                    required />
+                />
                 <label id="email" >Email:</label>
                 <input 
                     type="email" 
@@ -43,7 +48,7 @@ const Register = (props) => {
                     name="email"
                     value={email} 
                     onChange={e => onChange(e)} 
-                    required />
+                />
                 <label id="password" >Password:</label>
                 <input 
                     type="password" 
@@ -51,7 +56,7 @@ const Register = (props) => {
                     name="password"
                     value={password}
                     onChange={e => onChange(e)}
-                    required/>
+                />
                 <label id="password" >Confirm password:</label>
                 <input 
                     type="password" 
@@ -59,7 +64,7 @@ const Register = (props) => {
                     name="password2"
                     value={password2}
                     onChange={e => onChange(e)}
-                    required/>
+                />
                 <input type="submit" className="btn btn-add" />
                 <Link className="btn btn-cancel" to="/">Back</Link>
             </form>
@@ -67,4 +72,8 @@ const Register = (props) => {
     );
 }
 
-export default connect(null, {setAlert})(Register);
+const mapStateToProps = state => ({
+    isAuthenticated: state.auth.isAuthenticated
+});
+
+export default connect(mapStateToProps, {setAlert, register})(Register);
