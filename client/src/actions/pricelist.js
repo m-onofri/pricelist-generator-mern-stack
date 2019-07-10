@@ -51,3 +51,59 @@ export const createPricelist = (newPricelist) => async dispatch => {
         });
     }
 };
+
+export const addPeriod = (newPeriod, pricelistId) => async dispatch => {
+    try {
+        const config = {
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        }
+
+        const url = `api/pricelist/${pricelistId}/period/add`;
+    
+        const body = JSON.stringify(newPeriod);
+        //console.log(body);
+
+        const res = await axios.post(url, body, config);
+
+        dispatch({
+            type: CREATE_PRICELIST,
+            payload: res.data
+        });
+
+    } catch (err) {
+        dispatch({
+            type: PRICELIST_ERROR,
+            payload: { msg: err.response.statusText, status: err.response.status }
+        });
+    }
+}
+
+export const deletePeriod = (periodId, pricelistId) => async dispatch => {
+    try {
+        const config = {
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        }
+
+        const url = `api/pricelist/${pricelistId}/period/delete/${periodId}`;
+    
+        //const body = JSON.stringify(newPeriod);
+        //console.log(body);
+
+        const res = await axios.post(url, null, config);
+
+        dispatch({
+            type: CREATE_PRICELIST,
+            payload: res.data
+        });
+
+    } catch (err) {
+        dispatch({
+            type: PRICELIST_ERROR,
+            payload: { msg: err.response.statusText, status: err.response.status }
+        });
+    }
+}

@@ -1,13 +1,17 @@
 import React, {Component} from 'react';
 import PropTypes from 'prop-types';
 import SelectListini from '../SelectListini';
+import { addPeriod, deletePeriod } from '../../actions/pricelist';
+import { connect } from 'react-redux';
 
 class AdminUpdate extends Component {
     state = {
         loaded: false,
         newPeriod: false,
         data: undefined,
+        newPeriodData: {periodName: "", start: "", end: "", ad: 0, ad34: 0, chd3: 0, chd4: 0, inf: 0, culla: 10, animal: 5, sing: 14},
         priceList: "ALL_INCLUSIVE",
+        priceListId: "",
         priceLists: [],
         periods: []
     }
@@ -26,10 +30,19 @@ class AdminUpdate extends Component {
     updatePriceList = (event) => {
         const priceList = event.target.value;
         const periods = Object.keys(this.state.data[priceList]);
+        const priceListId = this.state.data[priceList].id;
         this.setState({
             priceList,
+            priceListId,
             periods
         });
+    }
+
+    updateNewPeriodData = event => {
+        this.setState({
+            newPeriodData: { ...this.state.newPeriodData, [event.target.name]: event.target.value }
+        })
+        
     }
 
     displayNewPeriodForm = () => this.setState({newPeriod: true});
@@ -37,6 +50,16 @@ class AdminUpdate extends Component {
     hideNewPeriodForm = (event) => {
         event.preventDefault();
         this.setState({newPeriod: false});
+    }
+
+    addNewPeriod = (event) => {
+        event.preventDefault();
+        this.props.addPeriod(this.state.newPeriodData, this.state.priceListId);
+    }
+
+    deleteCurrentPeriod = (event, periodId) => {
+        event.preventDefault();
+        this.props.deletePeriod(periodId, this.state.priceListId);
     }
 
     valueUpdateHandler = (event, period, isPrices) => {
@@ -52,10 +75,10 @@ class AdminUpdate extends Component {
     displayPriceLists = () => {
         const {periods, priceList, data} = this.state;
         const priceLists = Object.values(data[priceList]);
-        return priceLists.map((p, i) => {
+        return priceLists.filter(v => typeof v !== "string").map((p, i) => {
             return (
-                <form key={i} method="post" action="http://localhost:9000/priceList/manage">
-                    <input type="text" value={p.period} name="period" onChange={(e) => this.valueUpdateHandler(e, periods[i], false)} required/>
+                <form key={i} >
+                    <input type="text" value={p.periodName} name="periodName" onChange={(e) => this.valueUpdateHandler(e, periods[i], false)} required/>
                     <input type="date" value={this.dateValue(p.start)} name="start" onChange={(e) => this.valueUpdateHandler(e, periods[i], false)} required/>
                     <input type="date" value={this.dateValue(p.end)} name="end" onChange={(e) => this.valueUpdateHandler(e, periods[i], false)} required/>
                     <input type="number" value={p.prices.ad} name="ad" step="0.01" onChange={(e) => this.valueUpdateHandler(e, periods[i], true)} required min="0"/>
@@ -66,30 +89,31 @@ class AdminUpdate extends Component {
                     <input type="number" value={p.prices.culla} name="culla" step="0.01" onChange={(e) => this.valueUpdateHandler(e, periods[i], true)} required min="0"/>
                     <input type="number" value={p.prices.animal} name="animal" step="0.01" onChange={(e) => this.valueUpdateHandler(e, periods[i], true)} required min="0"/>
                     <input type="number" value={p.prices.sing} name="sing" step="0.01" onChange={(e) => this.valueUpdateHandler(e, periods[i], true)} required min="0"/>
-                    <input type="hidden" value={p._id} name="id" />
+                    {/* <input type="hidden" value={p._id} name="id" /> */}
                     <input className="btn btn-update" type="submit" value="Update" name="update" id={p._id} onClick={(e) => this.submitHandler(e, i)}/>
-                    <input className="btn btn-delete" type="submit" value="Delete" name="delete"/>
+                    <input className="btn btn-delete" type="submit" value="Delete" name="delete" onClick={(e) => this.deleteCurrentPeriod(e, p._id)}/>
                 </form>
             );
         });
     }
 
-    addNewPeriod = () => {
+    newPeriod = () => {
         if (this.state.newPeriod) {
+            const {periodName, start, end, ad, ad34, chd3, chd4, inf, culla, animal, sing} = this.state.newPeriodData;
             return(
-                <form method="post" action="http://localhost:9000/priceList/addNewPeriod">
-                    <input type="text" name="period" required/>
-                    <input type="date" name="start" required/>
-                    <input type="date"  name="end" required/>
-                    <input type="number" name="ad" step="0.01" required min="0"/>
-                    <input type="number" name="ad34" step="0.01" required min="0"/>
-                    <input type="number" name="chd3" step="0.01" required min="0"/>
-                    <input type="number" name="chd4" step="0.01" required min="0"/>
-                    <input type="number" name="inf" step="0.01" required min="0"/>
-                    <input type="number" name="culla" step="0.01" defaultValue={10} required min="0"/>
-                    <input type="number" name="animal" step="0.01" defaultValue={5} required min="0"/>
-                    <input type="number" name="sing" step="0.01" defaultValue={15} required min="0"/>
-                    <input className="btn btn-add" type="submit" value="Add" name="add_period"/>
+                <form method="post">
+                    <input type="text" name="periodName" value={periodName} required onChange={this.updateNewPeriodData}/>
+                    <input type="date" name="start" value={start} required onChange={this.updateNewPeriodData}/>
+                    <input type="date"  name="end" value={end} required onChange={this.updateNewPeriodData}/>
+                    <input type="number" name="ad" step="0.01" value={ad} required min="0" onChange={this.updateNewPeriodData}/>
+                    <input type="number" name="ad34" step="0.01" value={ad34} required min="0" onChange={this.updateNewPeriodData}/>
+                    <input type="number" name="chd3" step="0.01" value={chd3} required min="0" onChange={this.updateNewPeriodData}/>
+                    <input type="number" name="chd4" step="0.01" value={chd4} required min="0" onChange={this.updateNewPeriodData}/>
+                    <input type="number" name="inf" step="0.01" value={inf} required min="0"onChange={this.updateNewPeriodData}/>
+                    <input type="number" name="culla" step="0.01" value={culla} required min="0" onChange={this.updateNewPeriodData}/>
+                    <input type="number" name="animal" step="0.01" value={animal} required min="0" onChange={this.updateNewPeriodData}/>
+                    <input type="number" name="sing" step="0.01" value={sing} required min="0" onChange={this.updateNewPeriodData}/>
+                    <input className="btn btn-add" type="submit" value="Add" name="add_period" onClick={(e) => this.addNewPeriod(e)}/>
                     <input className="btn btn-cancel" type="submit" value="Cancel" onClick={(e) => this.hideNewPeriodForm(e)} />
                 </form>
             );
@@ -99,17 +123,19 @@ class AdminUpdate extends Component {
     componentDidMount() {
         const data = this.props.data;
         const priceLists = Object.keys(data);
-        const periods = Object.keys(data[this.state.priceList]);
+        const priceListId = data[this.state.priceList].id;
+        const periods = Object.keys(data[this.state.priceList]).filter(x => x !== 'id');
         this.setState({
             loaded: true,
             data,
             priceLists,
+            priceListId,
             periods
         });
     }
 
     displayFeedback = () => {
-        const {message, success} = this.state;
+        const {message, success} = this.props.message;
         if (message) {
             return (
                 <div className={success ? "success" : "error"}>
@@ -181,7 +207,7 @@ class AdminUpdate extends Component {
                             <p>Single room</p>
                         </div>
                         {this.displayPriceLists()}
-                        {this.addNewPeriod()}
+                        {this.newPeriod()}
                     </div>
                 </div>
              );
@@ -195,4 +221,8 @@ AdminUpdate.propTypes = {
     data: PropTypes.object.isRequired
 }
 
-export default AdminUpdate;
+const mapStateToProps = state => ({
+    message: state.pricelist.message
+});
+
+export default connect(mapStateToProps, { addPeriod, deletePeriod })(AdminUpdate);

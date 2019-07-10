@@ -16,8 +16,11 @@ router.get('/', auth, async (req, res) => {
                 return obj1;
             }, {});
             return obj;
-    }, {});
-    res.send(listino);
+        }, {});
+
+        data.map(d => listino[d.name].id = d._id);
+
+        res.send(listino);
     }catch (err) {
         console.error(err.message);
         res.status(500).send('Server error');
