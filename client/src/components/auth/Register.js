@@ -3,7 +3,8 @@ import { connect } from 'react-redux';
 import { Link, Redirect } from 'react-router-dom';
 import { setAlert } from '../../actions/alert';
 import { register } from '../../actions/auth';
-//import PropTypes from 'prop-types';
+import Alert from '../Alert';
+import PropTypes from 'prop-types';
 
 const Register = ({setAlert, register, isAuthenticated}) => {
     const [formData, setFormData] = useState({
@@ -27,11 +28,12 @@ const Register = ({setAlert, register, isAuthenticated}) => {
     }
 
     if (isAuthenticated) {
-        return <Redirect to="/app" />
+        return <Redirect to="/admin/create" />
     }
 
     return (
         <div className="auth-container">
+            <Alert />
             <form onSubmit={e => onSubmit(e)}>
                 <label id="name">Name:</label>
                 <input 
@@ -70,6 +72,12 @@ const Register = ({setAlert, register, isAuthenticated}) => {
             </form>
         </div>
     );
+}
+
+Register.propTypes = {
+    isAuthenticated: PropTypes.bool.isRequired,
+    setAlert: PropTypes.func.isRequired,
+    register: PropTypes.func.isRequired
 }
 
 const mapStateToProps = state => ({

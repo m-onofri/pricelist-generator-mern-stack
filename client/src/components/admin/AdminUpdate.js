@@ -1,4 +1,5 @@
 import React, {Component} from 'react';
+import uuid from 'uuid';
 import PropTypes from 'prop-types';
 import SelectListini from '../SelectListini';
 import { addPeriod, deletePeriod } from '../../actions/pricelist';
@@ -14,6 +15,20 @@ class AdminUpdate extends Component {
         priceListId: "",
         priceLists: [],
         periods: []
+    }
+
+    componentDidMount() {
+        const data = this.props.admin.pricelist;
+        const priceLists = Object.keys(data);
+        const priceListId = data[this.state.priceList].id;
+        const periods = Object.keys(data[this.state.priceList]).filter(x => x !== 'id');
+        this.setState({
+            loaded: true,
+            data,
+            priceLists,
+            priceListId,
+            periods
+        });
     }
 
     twoIntString = (value) => {
@@ -42,7 +57,6 @@ class AdminUpdate extends Component {
         this.setState({
             newPeriodData: { ...this.state.newPeriodData, [event.target.name]: event.target.value }
         })
-        
     }
 
     displayNewPeriodForm = () => this.setState({newPeriod: true});
@@ -50,16 +64,6 @@ class AdminUpdate extends Component {
     hideNewPeriodForm = (event) => {
         event.preventDefault();
         this.setState({newPeriod: false});
-    }
-
-    addNewPeriod = (event) => {
-        event.preventDefault();
-        this.props.addPeriod(this.state.newPeriodData, this.state.priceListId);
-    }
-
-    deleteCurrentPeriod = (event, periodId) => {
-        event.preventDefault();
-        this.props.deletePeriod(periodId, this.state.priceListId);
     }
 
     valueUpdateHandler = (event, period, isPrices) => {
@@ -72,12 +76,62 @@ class AdminUpdate extends Component {
         this.setState({data: newData});
     }
 
+    addNewPeriod = async (event) => {
+        event.preventDefault();
+        this.setState({loaded: false});
+        await this.props.addPeriod(this.state.newPeriodData, this.state.priceListId, undefined, this.props.history);
+        this.setState({
+            loaded: true,
+            data: this.props.admin.pricelist,
+            newPeriod: false
+        });
+    }
+
+    deleteCurrentPeriod = async (event, periodId) => {
+        event.preventDefault();
+        this.setState({loaded: false});
+        await this.props.deletePeriod(periodId, this.state.priceListId);
+        this.setState({
+            loaded: true,
+            data: this.props.admin.pricelist
+        });
+    }
+
+    submitHandler = async (e, periodId) => {
+        e.preventDefault();
+        this.setState({loaded: false});
+        const period = Object.values(this.state.data[this.state.priceList]).filter(p => p._id === periodId)[0];
+        const updatedPeriod = {
+            periodName: period.periodName,
+            start: period.start,
+            end: period.end,
+            ad: period.prices.ad,
+            ad34: period.prices.ad34,
+            chd3: period.prices.chd3,
+            chd4: period.prices.chd4,
+            inf: period.prices.inf,
+            culla: period.prices.culla,
+            animal: period.prices.animal,
+            sing: period.prices.sing
+        }
+
+        await this.props.addPeriod(updatedPeriod, this.state.priceListId, periodId);
+
+        this.setState({
+            loaded: true,
+            data: this.props.admin.pricelist
+        });
+    }
+
     displayPriceLists = () => {
         const {periods, priceList, data} = this.state;
         const priceLists = Object.values(data[priceList]);
-        return priceLists.filter(v => typeof v !== "string").map((p, i) => {
+        
+        return priceLists
+            .filter(v => typeof v !== "string")
+            .map((p, i) => {
             return (
-                <form key={i} >
+                <form key={uuid.v4()} >
                     <input type="text" value={p.periodName} name="periodName" onChange={(e) => this.valueUpdateHandler(e, periods[i], false)} required/>
                     <input type="date" value={this.dateValue(p.start)} name="start" onChange={(e) => this.valueUpdateHandler(e, periods[i], false)} required/>
                     <input type="date" value={this.dateValue(p.end)} name="end" onChange={(e) => this.valueUpdateHandler(e, periods[i], false)} required/>
@@ -89,8 +143,7 @@ class AdminUpdate extends Component {
                     <input type="number" value={p.prices.culla} name="culla" step="0.01" onChange={(e) => this.valueUpdateHandler(e, periods[i], true)} required min="0"/>
                     <input type="number" value={p.prices.animal} name="animal" step="0.01" onChange={(e) => this.valueUpdateHandler(e, periods[i], true)} required min="0"/>
                     <input type="number" value={p.prices.sing} name="sing" step="0.01" onChange={(e) => this.valueUpdateHandler(e, periods[i], true)} required min="0"/>
-                    {/* <input type="hidden" value={p._id} name="id" /> */}
-                    <input className="btn btn-update" type="submit" value="Update" name="update" id={p._id} onClick={(e) => this.submitHandler(e, i)}/>
+                    <input className="btn btn-update" type="submit" value="Update" name="update" id={p._id} onClick={(e) => this.submitHandler(e, p._id)}/>
                     <input className="btn btn-delete" type="submit" value="Delete" name="delete" onClick={(e) => this.deleteCurrentPeriod(e, p._id)}/>
                 </form>
             );
@@ -120,63 +173,6 @@ class AdminUpdate extends Component {
         }
     }
 
-    componentDidMount() {
-        const data = this.props.data;
-        const priceLists = Object.keys(data);
-        const priceListId = data[this.state.priceList].id;
-        const periods = Object.keys(data[this.state.priceList]).filter(x => x !== 'id');
-        this.setState({
-            loaded: true,
-            data,
-            priceLists,
-            priceListId,
-            periods
-        });
-    }
-
-    displayFeedback = () => {
-        const {message, success} = this.props.message;
-        if (message) {
-            return (
-                <div className={success ? "success" : "error"}>
-                    <p>{message}</p>
-                </div>
-            );
-        }
-    }
-
-    submitHandler = (e, i) => {
-        e.preventDefault();
-        const {data, priceList} = this.state;
-        const updatedPeriod = Object.values(data[priceList]).filter(p => p._id === e.target.id)[0];
-        
-        this.setState({
-            loaded: false,
-          });
-        
-        fetch('http://localhost:9000/priceList/manage', {
-            method: 'POST',
-            headers: {'Content-Type': 'application/json'},
-            body: JSON.stringify({priceList: JSON.stringify(updatedPeriod), update: "Update"})
-        })
-        .then(res => res.json())
-        .then(json => {
-            if (json.success) {
-                this.setState({
-                    success: true,
-                    message: json.message,
-                    loaded: true
-                });
-            } else {
-                this.setState({
-                    success: false,  
-                    message: json.message,
-                    loaded: true,
-                });
-            }
-        });
-    }
-
     render() {
         const {loaded, priceLists, priceList} = this.state;
         if (loaded) {
@@ -191,7 +187,6 @@ class AdminUpdate extends Component {
                         />
                         <button onClick={this.displayNewPeriodForm}>New Period</button>
                     </div>
-                    { this.displayFeedback() }
                     <div className="container">
                         <div className="header">
                             <p>Period</p>
@@ -222,7 +217,7 @@ AdminUpdate.propTypes = {
 }
 
 const mapStateToProps = state => ({
-    message: state.pricelist.message
-});
+    admin: state.pricelist
+ });
 
 export default connect(mapStateToProps, { addPeriod, deletePeriod })(AdminUpdate);

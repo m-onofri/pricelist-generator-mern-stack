@@ -2,7 +2,8 @@ import React, {useState} from 'react';
 import { Link, Redirect } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { login } from '../../actions/auth';
-//import PropTypes from 'prop-types';
+import Alert from '../Alert';
+import PropTypes from 'prop-types';
 
 const Login = ({login, isAuthenticated}) => {
     const [formData, setFormData] = useState({
@@ -25,6 +26,7 @@ const Login = ({login, isAuthenticated}) => {
 
     return (
         <div className="auth-container">
+            <Alert />
             <form onSubmit={e => onSubmit(e)}>
                 <label id="email">Email:</label>
                 <input 
@@ -47,6 +49,11 @@ const Login = ({login, isAuthenticated}) => {
             </form>
         </div>
     );
+}
+
+Login.propTypes = {
+    isAuthenticated: PropTypes.bool.isRequired,
+    login: PropTypes.func.isRequired
 }
 
 const mapStateToProps = state => ({

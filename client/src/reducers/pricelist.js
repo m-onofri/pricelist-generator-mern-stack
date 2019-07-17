@@ -3,8 +3,7 @@ import { GET_PRICELIST, PRICELIST_ERROR, CREATE_PRICELIST } from "../actions/typ
 const initialState = {
     pricelist: null,
     loading: true,
-    error: {},
-    message: {}
+    error: {}
 }
 
 export default function(state = initialState, action) {
@@ -26,7 +25,7 @@ export default function(state = initialState, action) {
         case CREATE_PRICELIST:
             return {
                 ...state,
-                message: payload,
+                pricelist: payload,
                 loading: false
             }
         default:

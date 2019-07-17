@@ -1,9 +1,8 @@
 import React, { useEffect } from 'react';
-import { Route, Switch, NavLink, BrowserRouter as Router } from 'react-router-dom';
+import { Route, Switch, BrowserRouter as Router } from 'react-router-dom';
 import LandingPage from './LandingPage';
 import Register from './auth/Register';
 import Login from './auth/Login';
-import Alert from './Alert';
 import Navbar from './Navbar';
 import MainApp from './MainApp';
 import PrivateRoute from './routing/PrivateRoute';
@@ -31,7 +30,6 @@ const App = () => {
             <div>
                 <Navbar />
                 <Route exact path="/" component={LandingPage} />
-                <Alert />
                 <Switch>
                     <Route exact path="/register" component={Register} />
                     <Route exact path="/login" component={Login} />

@@ -2,27 +2,30 @@ import React, { useEffect} from 'react';
 import { connect } from 'react-redux';
 import { getCurrentPricelist } from '../actions/pricelist';
 import Dashboard from './Dashboard';
+import PropTypes from 'prop-types';
 
-const MainApp = ({ pricelist, auth, getCurrentPricelist }) => {
+const MainApp = ({ pricelist: {loading, pricelist}, getCurrentPricelist }) => {
     useEffect(() => {
         getCurrentPricelist();
     }, [getCurrentPricelist]);
 
-    if (!pricelist.loading) { 
+    if (!loading) { 
         return (
             <div>   
-                <Dashboard data={pricelist.pricelist} />       
+                <Dashboard data={pricelist} />       
             </div>
         )
     } else {
         return ("Wait...");
     }
-    
 }
-    
-    
+
+MainApp.propTypes = {
+    pricelist: PropTypes.object.isRequired,
+    getCurrentPricelist: PropTypes.func.isRequired
+}
+ 
 const mapStateToProps = state => ({
-    auth: state.auth,
     pricelist: state.pricelist
 });
 

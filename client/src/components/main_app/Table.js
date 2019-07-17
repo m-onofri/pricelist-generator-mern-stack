@@ -1,6 +1,7 @@
 import React from 'react';
 import Resume from './Resume';
 import PropTypes from 'prop-types';
+import uuid from 'uuid';
 
 const Table = ({rooming, days, prices, total}) => {
 
@@ -13,7 +14,7 @@ const Table = ({rooming, days, prices, total}) => {
       <tbody>
         <tr>
           <th>Date</th>
-          {roomingArr.map(([category,]) => <th>{category}</th>)}
+          {roomingArr.map(([category,]) => <th key={uuid.v4()} >{category}</th>)}
           <th>Total</th>
         </tr>
         <Resume
@@ -29,7 +30,7 @@ const Table = ({rooming, days, prices, total}) => {
 Table.propTypes = {
   days: PropTypes.array.isRequired,
   prices: PropTypes.array.isRequired,
-  rooming: PropTypes.array.isRequired,
+  rooming: PropTypes.object.isRequired,
   total: PropTypes.number.isRequired
 }
 

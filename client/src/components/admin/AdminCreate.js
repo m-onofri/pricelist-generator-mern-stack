@@ -1,5 +1,6 @@
 import React, {Component} from 'react';
 import {connect} from 'react-redux';
+import { withRouter } from 'react-router-dom';
 import {createPricelist, getCurrentPricelist} from '../../actions/pricelist';
 import {register} from '../../actions/auth';
 import Periods from './Periods';
@@ -70,18 +71,7 @@ class AdminCreate extends Component {
 
     submitHandler = e => {
         e.preventDefault();
-        this.props.createPricelist(this.state.priceList);
-    }
-
-    displayFeedback = () => {
-        const {message, success} = this.props.message;
-        if (message) {
-            return (
-                <div className={success ? "success" : "error"}>
-                    <p>{message}</p>
-                </div>
-            );
-        }
+        this.props.createPricelist(this.state.priceList, this.props.history);
     }
 
     render() {
@@ -101,7 +91,6 @@ class AdminCreate extends Component {
                         </div>
                         <button onClick={this.buttonClickHandler}>Go!</button>
                     </div>
-                    { this.displayFeedback() }
                     <div className="container">
                         <div className="header">
                             <p>Name</p>
@@ -143,4 +132,4 @@ const mapStateToProps = state => ({
     message: state.pricelist.message
 });
 
-export default connect(mapStateToProps, {createPricelist, getCurrentPricelist, register})(AdminCreate);
+export default connect(mapStateToProps, {createPricelist, getCurrentPricelist, register})(withRouter(AdminCreate));

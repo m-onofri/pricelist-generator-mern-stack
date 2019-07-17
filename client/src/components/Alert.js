@@ -13,4 +13,8 @@ const mapStateToProps = state => ({
     alerts: state.alert
 })
 
+Alert.propTypes = {
+    alerts: PropTypes.array.isRequired
+}
+
 export default connect(mapStateToProps)(Alert);

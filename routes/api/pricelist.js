@@ -49,16 +49,12 @@ router.post('/create', [auth, [
         return res.status(400).json({errors: errors.array()});
     }
     try {
-        //const arr = JSON.parse(req.body.priceList);
         const arr = req.body.priceList;
         const name = arr[0][1].name;
         const pricelists = await PriceList.find({user: req.user.id});
         const namesArray = pricelists.map(p => p.name);
         if (namesArray.includes(name)) {
-            return res.send({
-                success: false,
-                message: 'Error: pricelist name must be unique.'
-            });
+            return res.status(400).json({errors: [{msg: 'Error: pricelist name must be unique.'}]});
         }
 
         const periods = arr.map(p => {
@@ -82,17 +78,11 @@ router.post('/create', [auth, [
         const periodsNames = periods.map(p => p.periodName);
         const periodsNamesSet = new Set(periodsNames);
         if (periodsNames.length !== periodsNamesSet.size) {
-            return res.send({
-                success: false,
-                message: 'Error: periods names must be unique.'
-            });
+            return res.status(400).json({errors: [{msg: 'Error: period name must be unique.'}]});
         }
         for (let period of periods) {
             if (period.start.getTime() >= period.end.getTime()) {
-                return res.send({
-                    success: false,
-                    message: 'Error: arrival date must be previous than departure date.'
-                });
+                return res.status(400).json({errors: [{msg: 'Error: arrival date must be previous than departure date.'}]});
             }
         }
         if (periods.length > 1) {
@@ -100,10 +90,7 @@ router.post('/create', [auth, [
             newPeriods.sort((a, b) => a.start.getTime() - b.start.getTime());
             for (let i = 0; i < (newPeriods.length - 1); i++) {
                 if (newPeriods[i].end.getTime() > newPeriods[i + 1].start.getTime()) {
-                    return res.send({
-                        success: false,
-                        message: 'Error: date ranges cannot overlap.'
-                    });
+                    return res.status(400).json({errors: [{msg: 'Error: date ranges cannot overlap.'}]});
                 }
             }
         }
@@ -116,10 +103,19 @@ router.post('/create', [auth, [
         await pricelist.save();    
         console.log("New pricelist created!");
 
-        return res.send({
-            success: true,
-            message: 'Pricelist saved!'
-        });
+        const data = await PriceList.find({user: req.user.id});
+        const listino = data.reduce((obj, item) => {
+            obj[item.name] = item.periods.reduce((obj1, period) => {
+                obj1[period.periodName] = period;
+                return obj1;
+            }, {});
+            return obj;
+        }, {});
+
+        data.map(d => listino[d.name].id = d._id);
+
+        res.send(listino);
+
     } catch(err) {
         console.error(err.message);
         res.status(500).send('Server error');
@@ -141,10 +137,7 @@ router.post('/update/:pricelist_id', [auth, [
         const pricelists = await PriceList.find({user: req.user.id});
         const namesArray = pricelists.map(p => p.name);
         if (namesArray.includes(newName)) {
-            return res.send({
-                success: false,
-                message: 'Error: pricelist name must be unique.'
-            });
+            return res.status(400).json({errors: [{msg: "Error: pricelist name must be unique."}]});
         }
         await PriceList.update({_id: req.params.pricelist_id},{$set:{
             name: newName.toUpperCase()}
@@ -166,19 +159,18 @@ router.post('/update/:pricelist_id', [auth, [
 router.post('/delete/:pricelist_id', auth, async (req, res) => {
     try {
         await PriceList.findOneAndRemove({_id: req.params.pricelist_id});
+
         console.log("Price List Deleted");
-        //res.redirect("http://localhost:3000/admin");
-        res.send('Pricelist deleted');
     } catch(err) {
         console.error(err.message);
         res.status(500).send('Server error');
     }
 });
 
-//@route POST api/pricelist/:pricelist_id/period/add
+//@route POST api/pricelist/:pricelist_id/period
 //@desc Add a new period to a pricelist
 //@access Private
-router.post('/:pricelist_id/period/add', [auth, [
+router.post('/:pricelist_id/period', [auth, [
     check('periodName', 'Period name is required').not().isEmpty(),
     check('start', 'Start date is required').not().isEmpty(),
     check('end', 'End date is required').not().isEmpty(),
@@ -196,7 +188,6 @@ router.post('/:pricelist_id/period/add', [auth, [
         return res.status(400).json({errors: errors.array()});
     }
     try {
-        //const priceList = JSON.parse(req.body.priceList);
         const periodData = {
             periodName: req.body.periodName,
             start: new Date(req.body.start),
@@ -214,36 +205,27 @@ router.post('/:pricelist_id/period/add', [auth, [
         }
         const data = await PriceList.findOne({_id: req.params.pricelist_id});
         
-        if (req.body.period_id) {
-            data.periods = data.periods.filter(p => p._id.toString !== req.body.period_id);
+        if (req.body.periodId) {
+            data.periods = data.periods.filter(p => p._id.toString() !== req.body.periodId);
         }
-        
+
         const periods = [...data.periods, periodData];
+        periods.sort((a, b) => a.start.getTime() - b.start.getTime());
         const periodsNames = periods.map(p => p.periodName);
         const periodsNamesSet = new Set(periodsNames);
         if (periodsNames.length !== periodsNamesSet.size) {
-            return res.send({
-                success: false,
-                message: 'Error: periods names must be unique.'
-            });
+            return res.status(400).json({errors: [{msg: "Error: periods names must be unique."}]});
         }
         for (let period of periods) {
             if (period.start.getTime() >= period.end.getTime()) {
-                return res.send({
-                    success: false,
-                    message: 'Error: arrival date must be previous than departure date.'
-                });
+                return res.status(400).json({errors: [{msg: "Error: arrival date must be previous than departure date."}]});
             }
         }
         if (periods.length > 1) {
             const newPeriods = [...periods];
-            newPeriods.sort((a, b) => a.start.getTime() - b.start.getTime());
             for (let i = 0; i < (newPeriods.length - 1); i++) {
                 if (newPeriods[i].end.getTime() > newPeriods[i + 1].start.getTime()) {
-                    return res.send({
-                        success: false,
-                        message: 'Error: date ranges cannot overlap.'
-                    });
+                    return res.status(400).json({errors: [{msg: "Error: date ranges cannot overlap."}]});
                 }
             }
         }
@@ -252,11 +234,21 @@ router.post('/:pricelist_id/period/add', [auth, [
             {_id: req.params.pricelist_id},
             {$set:{periods: periods}},
             {multi:true,new:true});
-        console.log("New period added");
-        return res.send({
-            success: true,
-            message: 'New period added'
-        });
+
+        const newData = await PriceList.find({user: req.user.id});
+        const listino = newData.reduce((obj, item) => {
+            obj[item.name] = item.periods.reduce((obj1, period) => {
+                obj1[period.periodName] = period;
+                return obj1;
+            }, {});
+            return obj;
+        }, {});
+
+        newData.map(d => listino[d.name].id = d._id);
+        
+        const message = req.body.periodId ? "Period update!" : "New period added";
+        console.log(message);
+        res.send(listino);
     } catch(err) {
         console.error(err.message);
         res.status(500).send('Server error'); 
@@ -271,10 +263,20 @@ router.post('/:pricelist_id/period/delete/:period_id', auth, async (req, res) =>
         const pricelist = await PriceList.findOne({_id: req.params.pricelist_id});
         const periods = pricelist.periods.filter(p => p._id.toString() !== req.params.period_id);
         pricelist.periods = periods;
-        await pricelist.save();
-        console.log("Period deleted");
-        //res.redirect("http://localhost:3000/admin");
-        res.send('Period deleted');
+        const savedPricelist =  await pricelist.save();
+
+        const data = await PriceList.find({user: req.user.id});
+        const listino = data.reduce((obj, item) => {
+            obj[item.name] = item.periods.reduce((obj1, period) => {
+                obj1[period.periodName] = period;
+                return obj1;
+            }, {});
+            return obj;
+        }, {});
+
+        data.map(d => listino[d.name].id = d._id);
+
+        res.send(listino);
     } catch(err) {
         console.error(err.message);
         res.status(500).send('Server error');

@@ -25,7 +25,8 @@ export const getCurrentPricelist = () => async dispatch => {
     }
 };
 
-export const createPricelist = (newPricelist) => async dispatch => {
+//Create a new pricelist
+export const createPricelist = (newPricelist, history) => async dispatch => {
 
     try {
         const config = {
@@ -35,7 +36,6 @@ export const createPricelist = (newPricelist) => async dispatch => {
         }
     
         const body = JSON.stringify({"priceList": newPricelist});
-        console.log(body);
 
         const res = await axios.post('/api/pricelist/create', body, config);
 
@@ -44,7 +44,16 @@ export const createPricelist = (newPricelist) => async dispatch => {
             payload: res.data
         });
 
+        dispatch(setAlert('Pricelist created'));
+
+        history.push('/admin');
     } catch (err) {
+        const errors = err.response.data.errors;
+
+        if (errors) {
+            errors.forEach(error => dispatch(setAlert(error.msg, 'danger')));
+        }
+
         dispatch({
             type: PRICELIST_ERROR,
             payload: { msg: err.response.statusText, status: err.response.status }
@@ -52,7 +61,8 @@ export const createPricelist = (newPricelist) => async dispatch => {
     }
 };
 
-export const addPeriod = (newPeriod, pricelistId) => async dispatch => {
+//Add or update a period to an existing pricelist
+export const addPeriod = (newPeriod, pricelistId, periodId) => async dispatch => {
     try {
         const config = {
             headers: {
@@ -60,10 +70,13 @@ export const addPeriod = (newPeriod, pricelistId) => async dispatch => {
             }
         }
 
-        const url = `api/pricelist/${pricelistId}/period/add`;
+        let url = `api/pricelist/${pricelistId}/period`;
+
+        if (periodId) {
+            newPeriod.periodId = periodId;
+        }
     
         const body = JSON.stringify(newPeriod);
-        //console.log(body);
 
         const res = await axios.post(url, body, config);
 
@@ -72,7 +85,15 @@ export const addPeriod = (newPeriod, pricelistId) => async dispatch => {
             payload: res.data
         });
 
+        dispatch(setAlert(periodId ? 'Period updated' : 'New Period added'));
+        
     } catch (err) {
+        const errors = err.response.data.errors;
+
+        if (errors) {
+            errors.forEach(error => dispatch(setAlert(error.msg, 'danger')));
+        }
+
         dispatch({
             type: PRICELIST_ERROR,
             payload: { msg: err.response.statusText, status: err.response.status }
@@ -80,6 +101,7 @@ export const addPeriod = (newPeriod, pricelistId) => async dispatch => {
     }
 }
 
+//Delete a period from a pricelist
 export const deletePeriod = (periodId, pricelistId) => async dispatch => {
     try {
         const config = {
@@ -89,9 +111,6 @@ export const deletePeriod = (periodId, pricelistId) => async dispatch => {
         }
 
         const url = `api/pricelist/${pricelistId}/period/delete/${periodId}`;
-    
-        //const body = JSON.stringify(newPeriod);
-        //console.log(body);
 
         const res = await axios.post(url, null, config);
 
@@ -100,6 +119,7 @@ export const deletePeriod = (periodId, pricelistId) => async dispatch => {
             payload: res.data
         });
 
+        dispatch(getCurrentPricelist());
     } catch (err) {
         dispatch({
             type: PRICELIST_ERROR,
