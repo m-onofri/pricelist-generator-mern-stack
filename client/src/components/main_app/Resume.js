@@ -1,14 +1,14 @@
-import React, {Component} from 'react';
+import React from 'react';
 import uuid from 'uuid';
 import PropTypes from 'prop-types';
 
-class Resume extends Component {
-  renderDate = timestamp => {
+const Resume = ({days, prices, rooming, total}) => {
+  const renderDate = timestamp => {
     const date = new Date(timestamp);
     return `${date.getDate()}-${date.getMonth() + 1}-${date.getFullYear()}`;
   }
 
-  dailyAmount = (rooming, price) => {
+  const dailyAmount = (rooming, price) => {
     const total = rooming
                     .map(([category, number]) => number * price[category])
                     .reduce((a, b) => {
@@ -17,33 +17,30 @@ class Resume extends Component {
     return Math.round(total * 100) / 100;
   }
 
-  renderTable = (days, prices, rooming) => {
+  const renderTable = (days, prices, rooming) => {
     let result = [];
     for(let i=0; i < days.length; i++) {
       for(let j=0; j < days[i][1].length; j++) {
         result.push(<tr key={uuid.v4()} >
-                      <td>{this.renderDate(days[i][1][j])}</td>
+                      <td>{renderDate(days[i][1][j])}</td>
                         {rooming.map(([category, number]) => <td key={uuid.v4()} >{number} x {prices[i][1][category]} €</td>)}
-                      <td>{this.dailyAmount(rooming, prices[i][1])} €</td>
+                      <td>{dailyAmount(rooming, prices[i][1])} €</td>
                     </tr>);
       }
     }
     result.push(<tr key={uuid.v4()} >
                   <th>{result.length} days</th>
                     {rooming.map(([category, number]) => <th key={uuid.v4()}>{number} {category}</th>)}
-                  <th>{this.props.total} €</th>
+                  <th>{total} €</th>
                 </tr>);
     return result;
   }
 
-  render() {
-    const {days, prices, rooming} = this.props;
-    return(
+  return (
       <>
-        {this.renderTable(days, prices, rooming)}
+        {renderTable(days, prices, rooming)}
       </>
-    );
-  }
+  );
 }
 
 Resume.propTypes = {

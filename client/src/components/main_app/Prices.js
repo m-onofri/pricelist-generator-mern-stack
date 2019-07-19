@@ -7,7 +7,7 @@ const Prices = ({days, id, value, updatePrices}) => {
   const lastDay = days[daysNumber - 1] + 86400000;
   const firstDay = days[0];
 
-  function renderDate(timestamp) {
+  const renderDate = timestamp => {
     const date = new Date(timestamp);
     return `${date.getDate()}-${date.getMonth() + 1}-${date.getFullYear()}`;
   }

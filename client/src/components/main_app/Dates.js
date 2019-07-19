@@ -14,7 +14,6 @@ const Dates = ({valueArr, updateArrival, valueDep, updateDeparture}) => {
   //return: formatted datastring "yyyy-mm-dd"
   const dateValue = timestamp => {
     const date = new Date(timestamp);
-    console.log( `${date.getFullYear()}-${twoIntString(date.getMonth() + 1)}-${twoIntString(date.getDate())}`);
     return `${date.getFullYear()}-${twoIntString(date.getMonth() + 1)}-${twoIntString(date.getDate())}`;
 
   }
@@ -39,7 +38,6 @@ const Dates = ({valueArr, updateArrival, valueDep, updateDeparture}) => {
     </div>
   </>
   )
-  
 }
   
 

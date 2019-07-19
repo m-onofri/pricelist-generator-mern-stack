@@ -149,10 +149,8 @@ const Dashboard = ({data}) => {
   }
 
   const updateDeparture = event => {
-    const {arrival, data, priceList, departure} = dashboardData;
+    const {arrival, data, priceList} = dashboardData;
     const endDate = getTimestamp(event);
-    console.log(departure - arrival);
-    console.log(endDate - arrival);
     if (arrival < endDate) {
       let days = manageDays(arrival, endDate, data[priceList]);
       setDashboardData({
