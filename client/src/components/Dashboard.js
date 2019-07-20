@@ -16,7 +16,7 @@ const Dashboard = ({data}) => {
     loaded: false,
     arrival: undefined,
     departure: undefined,
-    priceList: "LIDL",
+    priceList: "",
     priceLists: [],
     rooming: {ad: 0, ad34: 0, chd3: 0, chd4: 0, inf: 0, animal: 0, culla: 0, sing: 0},
     days: [], //[["a", [timestamp1, timestamp2, ...], [...]]]
@@ -31,19 +31,13 @@ const Dashboard = ({data}) => {
   const manageDays = useCallback((date, endDate, priceList) => {
     const realEndDate = endDate - 86400000;
     let daysReservation = selectPeriods(priceList); //{a: [], b: [], ...}
+    const periodsList = Object.keys(daysReservation);
     while(date <= realEndDate) {
-      if(is_included(date, new Date(priceList.a.start).getTime(), new Date(priceList.a.end).getTime())) {
-        daysReservation.a.push(date);
-      } else if (is_included(date, new Date(priceList.b.start).getTime(), new Date(priceList.b.end).getTime())) {
-        daysReservation.b.push(date);
-      } else if (is_included(date, new Date(priceList.c.start).getTime(), new Date(priceList.c.end).getTime())) {
-       daysReservation.c.push(date);
-     } else if (is_included(date, new Date(priceList.d.start).getTime(), new Date(priceList.d.end).getTime())) {
-        daysReservation.d.push(date);
-      } else if (is_included(date, new Date(priceList.e.start).getTime(), new Date(priceList.e.end).getTime())) {
-        daysReservation.e.push(date);
-      } else if (is_included(date, new Date(priceList.f.start).getTime(), new Date(priceList.f.end).getTime())) {
-        daysReservation.f.push(date);
+      for(let x = 0; x < periodsList.length; x++) {
+        const p = periodsList[x];
+        if(is_included(date, new Date(priceList[p].start).getTime(), new Date(priceList[p].end).getTime())) {
+          daysReservation[p].push(date);
+        }
       }
       date += 86400000;
     }
@@ -51,7 +45,6 @@ const Dashboard = ({data}) => {
   })
 
   useEffect(() => {
-    const {priceList} = dashboardData;
     const today = new Date();
     today.setHours(0);
     today.setMinutes(0);
@@ -60,18 +53,20 @@ const Dashboard = ({data}) => {
     const todayTimestamp = today.getTime();
     const tomorrowTimestamp = todayTimestamp + 86400000;
     const priceLists = Object.keys(data);
+    const priceList = priceLists[0];
     const selectedDays = manageDays(todayTimestamp, tomorrowTimestamp, data[priceList]);
     const prices = selectPrices(selectedDays, priceList, data);
-    setDashboardData({
-      ...dashboardData,
+    setDashboardData(d => ({
+      ...d,
       data,
       loaded: true,
       arrival: todayTimestamp,
       departure: tomorrowTimestamp,
       days: selectedDays,
+      priceList,
       priceLists,
       prices
-    });
+    }));
   }, []);
 
   //date, startDate, endDate: timestamps (ms)
@@ -120,7 +115,7 @@ const Dashboard = ({data}) => {
   //priceList: string
   //data: object {priceList1: {a: {prices: {}, ...}, b: {prices: {}, ...}, ...}, ...}
   //Return prices of the selected periods: array [["a", {...}], ["b", {...}]]
-  const selectPrices = (days, priceList, data) => days.map(([period, days]) => [period, data[priceList][period].prices]);
+  const selectPrices = (days, priceList, data) => days.map(([period, ]) => [period, data[priceList][period].prices]);
 
   const getTimestamp = event => {
     const date = event.target.value.split("-");
