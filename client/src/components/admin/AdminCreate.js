@@ -1,42 +1,43 @@
-import React, {Component} from 'react';
+import React, {useState} from 'react';
 import {connect} from 'react-redux';
 import { withRouter } from 'react-router-dom';
 import {createPricelist, getCurrentPricelist} from '../../actions/pricelist';
 import {register} from '../../actions/auth';
 import Periods from './Periods';
+import PropTypes from 'prop-types';
 
-class AdminCreate extends Component {
-    state = {
+const AdminCreate = ({createPricelist, history}) => {
+    const [createData, setCreateData] = useState({
         priceList: [],
         name: "new price list",
         periods: 1,
         success: true,
         message: "",
         loaded: true
-    }
+    })
 
-    priceListNameHandler = (e) => {
+    const priceListNameHandler = e => {
         const name = e.target.value;
-        this.setState({name});
+        setCreateData({...createData, name});
     }
 
-    priceListPeriodsHandler = (e) => {
+    const priceListPeriodsHandler = e => {
         const periods = parseInt(e.target.value);
-        this.setState({periods});
+        setCreateData({...createData, periods});
     }
 
     //value: integer
-    twoIntString = (value) => {
+    const twoIntString = value => {
         let stringValue = value.toString();
         if (stringValue.length < 2) stringValue = `0${stringValue}`;
         return stringValue;
     }
 
-    buttonClickHandler = () => {
+    const buttonClickHandler = () => {
         let priceList = [];
-        const {periods, name} = this.state;
+        const {periods, name} = createData;
         const todayDate = new Date();
-        const todayString = `${todayDate.getFullYear()}-${this.twoIntString(todayDate.getMonth() + 1)}-${this.twoIntString(todayDate.getDate())}`;
+        const todayString = `${todayDate.getFullYear()}-${twoIntString(todayDate.getMonth() + 1)}-${twoIntString(todayDate.getDate())}`;
         for (let j = 0; j < periods; j++) {
             const periodName = String.fromCharCode(97 + j);
             priceList.push([periodName, {
@@ -53,11 +54,11 @@ class AdminCreate extends Component {
                 culla: "10",
                 sing: "14"}]);
         }
-        this.setState({priceList});
+        setCreateData({...createData, priceList});
     }
 
-    addNewValuesHandler = (event) => {
-        const priceList = [...this.state.priceList];
+    const addNewValuesHandler = event => {
+        const priceList = [...createData.priceList];
         const section = event.target.parentNode.id.split('-')[1];
         const id = event.target.name;
         const value = event.target.value;
@@ -66,70 +67,72 @@ class AdminCreate extends Component {
                 priceList[i][1][id] = value.toString();
             }
         }
-        this.setState({priceList});
+        setCreateData({...createData, priceList});
     }
 
-    submitHandler = e => {
+    const submitHandler = e => {
         e.preventDefault();
-        this.props.createPricelist(this.state.priceList, this.props.history);
+        createPricelist(createData.priceList, history);
     }
 
-    render() {
-        const {loaded, name, periods} = this.state;
-        if (loaded) {
-            return(
-                <div id="admin_section">
-                    <h2 className="center">Create Price Lists</h2>
-                    <div className="selector">
-                        <div className="priceList-name">
-                            <label>Name</label>
-                            <input type="text" value={name} onChange={(e) => this.priceListNameHandler(e)}/>
-                        </div>
-                        <div className="priceList-name">
-                            <label>Periods</label>
-                            <input type="number" value={periods} onChange={(e) => this.priceListPeriodsHandler(e)}/>
-                        </div>
-                        <button onClick={this.buttonClickHandler}>Go!</button>
+    const {loaded, name, periods} = createData;
+    if (loaded) {
+        return(
+            <div id="admin_section">
+                <h2 className="center">Create Price Lists</h2>
+                <div className="selector">
+                    <div className="priceList-name">
+                        <label>Name</label>
+                        <input type="text" value={name} onChange={(e) => priceListNameHandler(e)}/>
                     </div>
-                    <div className="container">
-                        <div className="header">
-                            <p>Name</p>
-                            <p>Period</p>
-                            <p>Start</p>
-                            <p>End</p>
-                            <p>ad</p>
-                            <p>ad34</p>
-                            <p>chd3</p>
-                            <p>chd4</p>
-                            <p>Infant</p>
-                            <p>Cot</p>
-                            <p>Animal</p>
-                            <p>Single room</p>
-                        </div> 
-                        {this.state.priceList.map( (item, index) => {
-                            return(<Periods
-                                    key={index} 
-                                    index={item[0]}
-                                    data={item[1]}
-                                    addNewValuesHandler={this.addNewValuesHandler}/>
-                            );
-                     })}
+                    <div className="priceList-name">
+                        <label>Periods</label>
+                        <input type="number" value={periods} onChange={(e) => priceListPeriodsHandler(e)}/>
                     </div>
-                    <form onSubmit={(e) => this.submitHandler(e)}>
-                        <input type="submit" className="btn btn-add createNewPlaylist" value={"Go!"}/>
-                    </form>
-                    
+                    <button onClick={buttonClickHandler}>Go!</button>
                 </div>
-            );  
-        } else {
-            return "Wait...";
-        }
-        
+                <div className="container">
+                    <div className="header">
+                        <p>Name</p>
+                        <p>Period</p>
+                        <p>Start</p>
+                        <p>End</p>
+                        <p>ad</p>
+                        <p>ad34</p>
+                        <p>chd3</p>
+                        <p>chd4</p>
+                        <p>Infant</p>
+                        <p>Cot</p>
+                        <p>Animal</p>
+                        <p>Single room</p>
+                    </div> 
+                    {createData.priceList.map( (item, index) => {
+                        return(<Periods
+                                key={index} 
+                                index={item[0]}
+                                data={item[1]}
+                                addNewValuesHandler={addNewValuesHandler}/>
+                        );
+                    })}
+                </div>
+                <form onSubmit={(e) => submitHandler(e)}>
+                    <input type="submit" className="btn btn-add createNewPlaylist" value={"Go!"}/>
+                </form>
+                
+            </div>
+        );  
+    } else {
+        return "Wait...";
     }
 }
 
 const mapStateToProps = state => ({
     message: state.pricelist.message
 });
+
+AdminCreate.propTypes = {
+    message: PropTypes.object.isRequired,
+    createPricelist: PropTypes.func.isRequired
+}
 
 export default connect(mapStateToProps, {createPricelist, getCurrentPricelist, register})(withRouter(AdminCreate));

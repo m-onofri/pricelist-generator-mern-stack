@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 
 const Periods = ({index, data, addNewValuesHandler}) => {
     return (
@@ -17,6 +18,12 @@ const Periods = ({index, data, addNewValuesHandler}) => {
             <input type="number" name="sing" value={data.sing} onChange={addNewValuesHandler}/>
         </div>
     );
+}
+
+Periods.propTypes = {
+    index: PropTypes.number.isRequired,
+    data: PropTypes.object.isRequired,
+    addNewValuesHandler: PropTypes.func.isRequired
 }
 
 export default Periods;

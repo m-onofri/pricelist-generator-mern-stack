@@ -61,6 +61,7 @@ const Dashboard = ({data}) => {
     const tomorrowTimestamp = todayTimestamp + 86400000;
     const priceLists = Object.keys(data);
     const selectedDays = manageDays(todayTimestamp, tomorrowTimestamp, data[priceList]);
+    const prices = selectPrices(selectedDays, priceList, data);
     setDashboardData({
       ...dashboardData,
       data,
@@ -69,7 +70,7 @@ const Dashboard = ({data}) => {
       departure: tomorrowTimestamp,
       days: selectedDays,
       priceLists,
-      prices: selectPrices(selectedDays, priceList, data)
+      prices
     });
   }, []);
 
@@ -114,8 +115,6 @@ const Dashboard = ({data}) => {
                   return obj;
                 }, {});
   }
-
-  
 
   //days: array [["a", {...}], ["b", {...}]]
   //priceList: string
