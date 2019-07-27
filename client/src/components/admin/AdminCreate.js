@@ -4,6 +4,7 @@ import { withRouter } from 'react-router-dom';
 import {createPricelist, getCurrentPricelist} from '../../actions/pricelist';
 import {register} from '../../actions/auth';
 import Periods from './Periods';
+import Spinner from '../Spinner';
 import PropTypes from 'prop-types';
 
 const AdminCreate = ({createPricelist, history}) => {
@@ -122,7 +123,7 @@ const AdminCreate = ({createPricelist, history}) => {
             </div>
         );  
     } else {
-        return "Wait...";
+        return <Spinner />;
     }
 }
 

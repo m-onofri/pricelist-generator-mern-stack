@@ -1,8 +1,8 @@
 import React, {useState, useEffect} from 'react';
-import uuid from 'uuid';
 import PropTypes from 'prop-types';
 import SelectListini from '../SelectListini';
 import { addPeriod, deletePeriod } from '../../actions/pricelist';
+import Spinner from '../Spinner';
 import { connect } from 'react-redux';
 
 const AdminUpdate = ({addPeriod, history, deletePeriod, admin}) => {
@@ -138,7 +138,7 @@ const AdminUpdate = ({addPeriod, history, deletePeriod, admin}) => {
             .filter(v => typeof v !== "string")
             .map((p, i) => {
             return (
-                <form key={uuid.v4()} >
+                <form key={i} >
                     <input type="text" value={p.periodName} name="periodName" onChange={(e) => valueUpdateHandler(e, periods[i], false)} required/>
                     <input type="date" value={dateValue(p.start)} name="start" onChange={(e) => valueUpdateHandler(e, periods[i], false)} required/>
                     <input type="date" value={dateValue(p.end)} name="end" onChange={(e) => valueUpdateHandler(e, periods[i], false)} required/>
@@ -213,7 +213,7 @@ const AdminUpdate = ({addPeriod, history, deletePeriod, admin}) => {
             </div>
             );
     } else {
-        return "Wait...";
+        return <Spinner />;
     }
 }
 

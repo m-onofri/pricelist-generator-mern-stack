@@ -1,11 +1,12 @@
 import React, { useEffect, useState, useCallback } from 'react';
 import PropTypes from 'prop-types';
 import Dates from './main_app/Dates';
-import SelectListini from './SelectListini.js';
+import SelectListini from './SelectListini';
 import Rooming from './main_app/Rooming';
 import PricesList from './main_app/PricesList';
 import Table from './main_app/Table';
 import TotalAmount from './main_app/TotalAmount';
+import Spinner from './Spinner'
 import './App.css';
 
 //class Dashboard extends Component {
@@ -227,7 +228,7 @@ const Dashboard = ({data}) => {
       </div>
     );
   } else  {
-    return "Wait...";
+    return <Spinner />
   }
 }
 

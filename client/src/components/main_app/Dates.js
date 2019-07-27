@@ -15,7 +15,6 @@ const Dates = ({valueArr, updateArrival, valueDep, updateDeparture}) => {
   const dateValue = timestamp => {
     const date = new Date(timestamp);
     return `${date.getFullYear()}-${twoIntString(date.getMonth() + 1)}-${twoIntString(date.getDate())}`;
-
   }
 
   return (
@@ -40,7 +39,6 @@ const Dates = ({valueArr, updateArrival, valueDep, updateDeparture}) => {
   )
 }
   
-
 Dates.propTypes = {
   valueArr: PropTypes.number.isRequired,
   valueDep: PropTypes.number.isRequired,

@@ -2,6 +2,7 @@ import React, { Fragment } from 'react';
 import { NavLink } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { logout } from '../actions/auth';
+import PropTypes from 'prop-types';
 
 const Navbar = ({ auth: { isAuthenticated, loading}, logout }) => {
     const authLinks = (
@@ -27,7 +28,10 @@ const Navbar = ({ auth: { isAuthenticated, loading}, logout }) => {
     );
 }
     
-
+Navbar.propTypes = {
+    auth: PropTypes.object.isRequired,
+    logout: PropTypes.func.isRequired
+}
 
 const mapStateToProps = state => ({
     auth: state.auth
