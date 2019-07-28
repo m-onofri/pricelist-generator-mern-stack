@@ -7,8 +7,8 @@ import PropTypes from 'prop-types';
 
 const Login = ({login, isAuthenticated}) => {
     const [formData, setFormData] = useState({
-        email: "",
-        password: ""
+        email: "Email Address",
+        password: "Password"
     });
 
     const { email, password } = formData;
@@ -25,29 +25,44 @@ const Login = ({login, isAuthenticated}) => {
     }
 
     return (
-        <div className="auth-container">
+        <section className="container">
             <Alert />
-            <form onSubmit={e => onSubmit(e)}>
-                <label id="email">Email:</label>
-                <input 
-                    type="text"
-                    id="email"
-                    value={email}
-                    name="email"
-                    onChange={e => onChange(e)} 
-                    required />
-                <label id="password" >Password:</label>
-                <input 
-                    type="password" 
-                    id="password" 
-                    value={password}
-                    name="password"
-                    onChange={e => onChange(e)}
-                    required />
-                <input type="submit" className="btn btn-add" />
-                <Link className="btn btn-cancel" to="/">Back</Link>
-            </form>
-        </div>
+            <div className="access-container">
+                <h1 className="large text-primary">Sign In</h1>
+                <p className="lead">
+                    <i className="fas fa-user hide-sm"></i>
+                    Sign into your account
+                </p>
+                <form className="form" onSubmit={e => onSubmit(e)}>
+                    <div className="form-group">
+                        <input 
+                            type="email" 
+                            value={email}
+                            name="email"
+                            onChange={e => onChange(e)} 
+                            required
+                        />
+                    </div>
+                    <div className="form-group">
+                        <input 
+                            type="password" 
+                            value={password}
+                            name="password"
+                            onChange={e => onChange(e)}
+                            required
+                        />
+                    </div>
+                    <input 
+                        type="submit"
+                        value="Log In"
+                        className="btn btn-primary"
+                    />
+                </form>
+                <p className="my-1">
+                    Don't have an account? <a href="/register">Sign Up</a>
+                </p>
+            </div>
+        </section>
     );
 }
 

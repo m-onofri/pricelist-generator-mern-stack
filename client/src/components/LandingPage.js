@@ -2,12 +2,17 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 
 const LandingPage = () =>
-<div className="landing-page">
-  <h1>Price Lists Generator</h1>
-  <div className="landing-page_buttons">
-      <Link to="/register" className="btn btn-add">Register</Link>
-      <Link to="/login" className="btn btn-add">Login</Link>
-  </div>
-</div>
+  <section class="landing">
+    <div class="dark-overlay">
+        <div class="landing-inner">
+            <h1 class="x-large">Price Quotations Generator</h1>
+            <p class="lead">Create your price lists and deliver your price quotations easily</p>
+            <div class="buttons">
+                <Link to="/register" class="btn btn-primary">Sign Up</Link>
+                <Link to="/login" class="btn">Log In</Link>
+            </div>
+        </div>
+    </div>
+  </section>
 
 export default LandingPage;

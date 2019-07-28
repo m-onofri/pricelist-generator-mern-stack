@@ -32,45 +32,56 @@ const Register = ({setAlert, register, isAuthenticated}) => {
     }
 
     return (
-        <div className="auth-container">
+        <section class="container">
             <Alert />
-            <form onSubmit={e => onSubmit(e)}>
-                <label id="name">Name:</label>
-                <input 
-                    type="text"
-                    id="name"
-                    name="name"
-                    value={name} 
-                    onChange={e => onChange(e)} 
-                />
-                <label id="email" >Email:</label>
-                <input 
-                    type="email" 
-                    id="email"
-                    name="email"
-                    value={email} 
-                    onChange={e => onChange(e)} 
-                />
-                <label id="password" >Password:</label>
-                <input 
-                    type="password" 
-                    id="password"
-                    name="password"
-                    value={password}
-                    onChange={e => onChange(e)}
-                />
-                <label id="password" >Confirm password:</label>
-                <input 
-                    type="password" 
-                    id="password2"
-                    name="password2"
-                    value={password2}
-                    onChange={e => onChange(e)}
-                />
-                <input type="submit" className="btn btn-add" />
-                <Link className="btn btn-cancel" to="/">Back</Link>
-            </form>
-        </div>
+            <div class="access-container">
+                <h1 class="large text-primary">Sign Up</h1>
+                <p class="lead">
+                    <i class="fas fa-user hide-sm"></i>
+                    Create your account
+                </p>
+                <form class="form" onSubmit={e => onSubmit(e)}>
+                    <div class="form-group">
+                        <input 
+                            type="text" 
+                            placeholder="Name"
+                            value={name} 
+                            onChange={e => onChange(e)}
+                            required />
+                    </div>
+                    <div class="form-group">
+                        <input 
+                            type="email" 
+                            placeholder="Email Address"
+                            value={password}
+                            onChange={e => onChange(e)}/>
+                    </div>
+                    <div class="form-group">
+                        <input 
+                            type="password" 
+                            placeholder="Password"
+                            minlength="6"
+                            value={password}
+                            onChange={e => onChange(e)}/>
+                    </div>
+                    <div class="form-group">
+                        <input 
+                            type="password" 
+                            placeholder="Confirm Password" 
+                            minlength="6"
+                            value={password2}
+                            onChange={e => onChange(e)}/>
+                    </div>
+                    <input 
+                        type="submit" 
+                        value="Register" 
+                        class="btn btn-primary"/>
+                </form>
+                <p class="my-1">
+                    Already have an account? <Link to="./login">Sign In</Link>
+                </p>
+            </div>
+        </section>
     );
 }
 

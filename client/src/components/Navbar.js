@@ -1,24 +1,38 @@
 import React, { Fragment } from 'react';
-import { NavLink } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { logout } from '../actions/auth';
 import PropTypes from 'prop-types';
 
 const Navbar = ({ auth: { isAuthenticated, loading}, logout }) => {
     const authLinks = (
-        <div className="nav" >
-            <NavLink exact activeClassName="active" className="link" to="/app">Price Generator</NavLink>
-            <NavLink exact activeClassName="active" className="link" to="/admin">Admin Page</NavLink>
-            <a  className="link" href="#!" onClick={logout}>Log Out</a>
-        </div>
+        <nav class="navbar bg-dark">
+            <h1>
+                <a href="/app">
+                    PQGenerator
+                </a>
+            </h1>
+            <ul>
+                <li><Link to="/app">Dashboard</Link></li>
+                <li><Link to="/admin">Admin</Link></li>
+                <li><Link to="/register">Register</Link></li>
+                <li><a href="#!" onClick={logout}>Log Out</a></li>
+            </ul>
+        </nav>
     );
 
     const guestLinks = (
-        <div className="nav" >
-            <NavLink exact activeClassName="active" className="link" to="/app">Price Generator</NavLink>
-            <NavLink exact activeClassName="active" className="link" to="/admin">Admin Page</NavLink>
-            <a  className="link" href="/login" >Log In</a>
-        </div>
+        <nav class="navbar bg-dark">
+            <h1>
+                <a href="/app">
+                    PQGenerator
+                </a>
+            </h1>
+            <ul>
+                <li><Link to="/register">Register</Link></li>
+                <li><Link to="/login">Login</Link></li>
+            </ul>
+        </nav>
     );
 
     return (
