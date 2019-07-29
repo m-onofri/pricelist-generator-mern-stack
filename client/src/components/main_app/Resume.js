@@ -21,14 +21,14 @@ const Resume = ({days, prices, rooming, total}) => {
     let result = [];
     for(let i=0; i < days.length; i++) {
       for(let j=0; j < days[i][1].length; j++) {
-        result.push(<tr key={uuid.v4()} >
+        result.push(<tr key={uuid.v4()} className="data">
                       <td>{renderDate(days[i][1][j])}</td>
                         {rooming.map(([category, number]) => <td key={uuid.v4()} >{number} x {prices[i][1][category]} €</td>)}
                       <td>{dailyAmount(rooming, prices[i][1])} €</td>
                     </tr>);
       }
     }
-    result.push(<tr key={uuid.v4()} >
+    result.push(<tr key={uuid.v4()} className="resume bg-primary" >
                   <th>{result.length} days</th>
                     {rooming.map(([category, number]) => <th key={uuid.v4()}>{number} {category}</th>)}
                   <th>{total} €</th>

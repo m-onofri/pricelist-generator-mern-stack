@@ -10,9 +10,9 @@ const Table = ({rooming, days, prices, total}) => {
   const roomingArr = Object.entries(rooming).filter(([, number]) => number !== 0);
 
   return (
-    <table>
+    <table className="table">
       <tbody>
-        <tr>
+        <tr class="header bg-primary">
           <th>Date</th>
           {roomingArr.map(([category,]) => <th key={uuid.v4()} >{category}</th>)}
           <th>Total</th>

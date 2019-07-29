@@ -2,10 +2,15 @@ import React from 'react';
 import PropTypes from 'prop-types';
 
 const RoomingElement = ({title, id, value, updateRooming}) =>
-<div className="rooming">
-  <label>{title}</label>
-  <input id={id} type="number" value={value} onChange={updateRooming}/>
-</div>
+  <div class="input-block">
+    <label for="">{title}</label>
+    <input 
+    type="number"
+    id={id}
+    value={value} 
+    onChange={updateRooming}
+    />
+  </div>
 
 RoomingElement.propTypes = {
   title: PropTypes.string.isRequired,

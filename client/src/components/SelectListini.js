@@ -2,15 +2,17 @@ import React from 'react';
 import PropTypes from 'prop-types';
 
 const SelectListini = ({updatePriceList, value, priceLists}) =>
-  <div id="pricelists">
-    <label>Price Lists</label>
-    <select
-      id="listini"
-      name="listini"
-      onChange={updatePriceList}
-      value={value}>
-        {priceLists.map((x, i) => <option key={i} value={x}>{x}</option>)}
-    </select>
+  <div class="pricelists">
+    <label for="pricelist">Pricelists</label><br/>
+    <div class="styled-select">
+      <select
+        id="listini"
+        name="listini"
+        onChange={updatePriceList}
+        value={value}>
+          {priceLists.map((x, i) => <option key={i} value={x}>{x}</option>)}
+      </select> 
+    </div>
   </div>
 
 SelectListini.propTypes = {

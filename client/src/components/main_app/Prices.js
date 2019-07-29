@@ -13,18 +13,67 @@ const Prices = ({days, id, value, updatePrices}) => {
   }
 
   return(
-    <div className="list" id={id} >
-      <p style={{textAlign: 'center'}}>Days: {daysNumber}</p>
-      <p style={{textAlign: "center"}}>from {renderDate(firstDay)}</p>
-      <p style={{textAlign: "center"}}>to {renderDate(lastDay)}</p>
-      <input id="ad" type="number" value={value.ad} onChange={updatePrices}/>
-      <input id="ad34" type="number" value={value.ad34} onChange={updatePrices}/>
-      <input id="chd3" type="number" value={value.chd3} onChange={updatePrices}/>
-      <input id="chd4" type="number" value={value.chd4} onChange={updatePrices}/>
-      <input id="inf" type="number" value={value.inf} onChange={updatePrices}/>
-      <input id="animal" type="number" value={value.animal} onChange={updatePrices}/>
-      <input id="culla" type="number" value={value.culla} onChange={updatePrices}/>
-      <input id="sing" type="number" value={value.sing} onChange={updatePrices}/>
+    <div class="column price-column" id={id}>
+      <h3>Days: {daysNumber}</h3>
+      <p>from {renderDate(firstDay)}</p>
+      <p>to {renderDate(lastDay)}</p>
+      <div class="input-block">
+          <input 
+            type="number"
+            id="ad"
+            value={value.ad} 
+            onChange={updatePrices}/>
+      </div>
+      <div class="input-block">
+          <input 
+            type="number"
+            id="ad34"
+            value={value.ad34} 
+            onChange={updatePrices}/>
+      </div>
+      <div class="input-block">
+          <input 
+            type="number"
+            id="chd3" 
+            value={value.chd3} 
+            onChange={updatePrices}/>
+      </div>
+      <div class="input-block">
+          <input 
+            type="number"
+            id="chd4"
+            value={value.chd4}
+            onChange={updatePrices}/>
+      </div>
+      <div class="input-block">
+          <input 
+            type="number"
+            id="inf"
+            value={value.inf}
+            onChange={updatePrices}/>
+      </div>
+      <div class="input-block">
+          <input 
+            type="number"
+            id="animal"
+            value={value.animal}
+            onChange={updatePrices}/>
+      </div>
+      <div class="input-block">
+          <input 
+            type="number" 
+            id="culla"
+            value={value.culla} 
+            onChange={updatePrices}
+            />
+      </div>
+      <div class="input-block">
+          <input 
+            type="number"
+            id="sing"
+            value={value.sing} 
+            onChange={updatePrices}/>
+      </div>
     </div>
   );
 }

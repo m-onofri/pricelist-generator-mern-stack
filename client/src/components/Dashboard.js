@@ -181,7 +181,7 @@ const Dashboard = ({data}) => {
 
   const updatePrices = event => {
     const prices = [...dashboardData.prices];
-    const section = event.target.parentNode.id;
+    const section = event.target.parentNode.parentNode.id;
     const id = event.target.id;
     const value = event.target.value;
     for(let i=0; i < prices.length; i++) {
@@ -195,37 +195,38 @@ const Dashboard = ({data}) => {
   const {loaded, arrival, departure, priceList, priceLists, rooming, days, prices} = dashboardData;
   if(loaded) {
     return (
-      <div className="App">
-        <div id="first_section">
-          <Dates
-            updateArrival={updateArrival}
-            updateDeparture={updateDeparture}
-            valueArr={arrival}
-            valueDep={departure}/>
-          <SelectListini
-            priceLists={priceLists}
-            value={priceList}
-            updatePriceList={updatePriceList}/>
-          <TotalAmount total={totalAmount()}/>
+      <section class="container">
+        <div class="dashboard">
+            <h1 class="my-1">Dashboard</h1>
+            <div class="dashboard-cmd my-1">
+              <Dates
+              updateArrival={updateArrival}
+              updateDeparture={updateDeparture}
+              valueArr={arrival}
+              valueDep={departure}/>
+              <SelectListini
+                priceLists={priceLists}
+                value={priceList}
+                updatePriceList={updatePriceList}/> 
+            </div>
+            <TotalAmount total={totalAmount()}/>
+            <div class="dashboard-prices_columns my-1">
+              <Rooming
+                value={rooming}
+                updateRooming={updateRooming}/>
+              <PricesList
+              prices={prices}
+              days={days}
+              updatePrices={updatePrices}/>
+            </div>
+            <a href="#" class="btn btn-primary my-2">Display resume <i class="fas fa-caret-down"></i></a>
+            <Table 
+              days={days}
+              prices={prices}
+              rooming={rooming}
+              total={totalAmount()}/>
         </div>
-        <div id="second_section">
-          <Rooming
-            value={rooming}
-            updateRooming={updateRooming}/>
-          <PricesList
-            prices={prices}
-            days={days}
-            updatePrices={updatePrices}/>
-        </div>
-        <div id="resumeTable">
-          <h2>Resume Table</h2>
-          <Table 
-            days={days}
-            prices={prices}
-            rooming={rooming}
-            total={totalAmount()}/>
-        </div>
-      </div>
+    </section>
     );
   } else  {
     return <Spinner />
