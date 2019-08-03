@@ -1,6 +1,6 @@
 import React, {useEffect} from 'react';
 import PropTypes from 'prop-types';
-import { Route, NavLink, BrowserRouter as Router } from 'react-router-dom';
+import { Route, Link, BrowserRouter as Router } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { getCurrentPricelist } from '../actions/pricelist';
 import AdminCreate from './admin/AdminCreate';
@@ -16,11 +16,9 @@ const Admin = ({admin, getCurrentPricelist}) => {
         return (
             <Router>
                 <div>
-                    <div id="first_section">
-                        <div className="admin-nav">
-                            <NavLink exact activeClassName="active-bis" className="link-bis" to="/admin">Update Price Lists</NavLink>
-                            <NavLink activeClassName="active-bis" className="link-bis" to="/admin/create">Create Price Lists</NavLink>
-                        </div>
+                    <div className="admin-navbar bg-dark">
+                        <Link exact to="/admin">Update Price Lists</Link>
+                        <Link to="/admin/create">Create Price Lists</Link>
                     </div>
                     <Alert />
                     <Route exact path="/admin" render={() =>  <AdminUpdate data={admin.pricelist} />}  />

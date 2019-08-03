@@ -136,17 +136,26 @@ router.post('/update/:pricelist_id', [auth, [
         const newName = req.body.name;
         const pricelists = await PriceList.find({user: req.user.id});
         const namesArray = pricelists.map(p => p.name);
-        if (namesArray.includes(newName)) {
+        if (namesArray.includes(newName.toUpperCase())) {
             return res.status(400).json({errors: [{msg: "Error: pricelist name must be unique."}]});
         }
-        await PriceList.update({_id: req.params.pricelist_id},{$set:{
+        await PriceList.updateOne({_id: req.params.pricelist_id},{$set:{
             name: newName.toUpperCase()}
         },{multi:true,new:true});
         console.log("Pricelist name changed!");
-        return res.send({
-            success: true,
-            message: 'Pricelist name changed!'
-        });
+        
+        const data = await PriceList.find({user: req.user.id});
+        const listino = data.reduce((obj, item) => {
+            obj[item.name] = item.periods.reduce((obj1, period) => {
+                obj1[period.periodName] = period;
+                return obj1;
+            }, {});
+            return obj;
+        }, {});
+
+        data.map(d => listino[d.name].id = d._id);
+
+        res.send(listino);
     } catch (err) {
         console.error(err.message);
         res.status(500).send('Server error');
@@ -161,6 +170,19 @@ router.post('/delete/:pricelist_id', auth, async (req, res) => {
         await PriceList.findOneAndRemove({_id: req.params.pricelist_id});
 
         console.log("Price List Deleted");
+
+        const data = await PriceList.find({user: req.user.id});
+        const listino = data.reduce((obj, item) => {
+            obj[item.name] = item.periods.reduce((obj1, period) => {
+                obj1[period.periodName] = period;
+                return obj1;
+            }, {});
+            return obj;
+        }, {});
+
+        data.map(d => listino[d.name].id = d._id);
+
+        res.send(listino);
     } catch(err) {
         console.error(err.message);
         res.status(500).send('Server error');

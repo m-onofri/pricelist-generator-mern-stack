@@ -18,7 +18,7 @@ const AdminCreate = ({createPricelist, history}) => {
     })
 
     const priceListNameHandler = e => {
-        const name = e.target.value;
+        const name = e.target.value.toUpperCase();
         setCreateData({...createData, name});
     }
 
@@ -34,7 +34,8 @@ const AdminCreate = ({createPricelist, history}) => {
         return stringValue;
     }
 
-    const buttonClickHandler = () => {
+    const buttonClickHandler = (event) => {
+        event.preventDefault();
         let priceList = [];
         const {periods, name} = createData;
         const todayDate = new Date();
@@ -55,12 +56,13 @@ const AdminCreate = ({createPricelist, history}) => {
                 culla: "10",
                 sing: "14"}]);
         }
+        console.log(priceList);
         setCreateData({...createData, priceList});
     }
 
     const addNewValuesHandler = event => {
         const priceList = [...createData.priceList];
-        const section = event.target.parentNode.id.split('-')[1];
+        const section = event.target.parentNode.parentNode.id.split('-')[1];
         const id = event.target.name;
         const value = event.target.value;
         for(let i=0; i < priceList.length; i++) {
@@ -73,54 +75,88 @@ const AdminCreate = ({createPricelist, history}) => {
 
     const submitHandler = e => {
         e.preventDefault();
+        console.log(createData.priceList);
         createPricelist(createData.priceList, history);
     }
 
     const {loaded, name, periods} = createData;
     if (loaded) {
         return(
-            <div id="admin_section">
-                <h2 className="center">Create Price Lists</h2>
-                <div className="selector">
-                    <div className="priceList-name">
-                        <label>Name</label>
-                        <input type="text" value={name} onChange={(e) => priceListNameHandler(e)}/>
+            <section className="container">
+                <div className="admin-create">
+                    <h1 className="my-3">Create Pricelist</h1>
+                    <div className="admin-create-cmd my-1">
+                        <div className="period-name">
+                            <label>Name</label><br/>
+                            <input 
+                                type="text" 
+                                className="styled-input"
+                                value={name} 
+                                onChange={(e) => priceListNameHandler(e)}/>
+                        </div>
+                        <div className="period-number">
+                            <label>Number</label><br/>
+                            <input 
+                                type="number"
+                                className="styled-input"
+                                value={periods} 
+                                onChange={(e) => priceListPeriodsHandler(e)}/>
+                        </div>
+                        <a 
+                            href="!#"
+                            style={{"margin-top": '1.2rem'}}
+                            className="btn btn-primary btn-long"
+                            onClick={buttonClickHandler}
+                            >Setup New Pricelist</a>
                     </div>
-                    <div className="priceList-name">
-                        <label>Periods</label>
-                        <input type="number" value={periods} onChange={(e) => priceListPeriodsHandler(e)}/>
+                    <div className="admin-create-prices_columns my-1">
+                        <div className="column rooming-column">
+                            <div className="input-block">
+                                <label>Period</label>
+                            </div>
+                            <div className="input-block">
+                                <label>From</label>
+                            </div>
+                            <div className="input-block">
+                                <label>To</label>
+                            </div>
+                            <div className="input-block">
+                                <label>Adulti</label>
+                            </div>
+                            <div className="input-block">
+                                <label>Ad 3-4</label>
+                            </div>
+                            <div className="input-block">
+                                <label>Chd 3</label>
+                            </div>
+                            <div className="input-block">
+                                <label>Chd 4</label>
+                            </div>
+                            <div className="input-block">
+                                <label>Infant</label>
+                            </div>
+                            <div className="input-block">
+                                <label>Culla</label>
+                            </div>
+                            <div className="input-block">
+                                <label>Animal</label>
+                            </div>
+                            <div className="input-block">
+                                <label>Sup. sing</label>
+                            </div>
+                        </div>
+                        {createData.priceList.map( (item, index) => {
+                            return(<Periods
+                                    key={index} 
+                                    index={item[0]}
+                                    data={item[1]}
+                                    addNewValuesHandler={addNewValuesHandler}/>
+                            );
+                        })}
                     </div>
-                    <button onClick={buttonClickHandler}>Go!</button>
+                    <a href="!#" class="btn btn-primary my-2" onClick={(e) => submitHandler(e)}>Create Pricelist</a> 
                 </div>
-                <div className="container">
-                    <div className="header">
-                        <p>Name</p>
-                        <p>Period</p>
-                        <p>Start</p>
-                        <p>End</p>
-                        <p>ad</p>
-                        <p>ad34</p>
-                        <p>chd3</p>
-                        <p>chd4</p>
-                        <p>Infant</p>
-                        <p>Cot</p>
-                        <p>Animal</p>
-                        <p>Single room</p>
-                    </div> 
-                    {createData.priceList.map( (item, index) => {
-                        return(<Periods
-                                key={index} 
-                                index={item[0]}
-                                data={item[1]}
-                                addNewValuesHandler={addNewValuesHandler}/>
-                        );
-                    })}
-                </div>
-                <form onSubmit={(e) => submitHandler(e)}>
-                    <input type="submit" className="btn btn-add createNewPlaylist" value={"Go!"}/>
-                </form>
-                
-            </div>
+            </section>
         );  
     } else {
         return <Spinner />;

@@ -14,6 +14,7 @@ const Dashboard = ({data}) => {
 
   const [dashboardData, setDashboardData] = useState({
     data: {},
+    table: false,
     loaded: false,
     arrival: undefined,
     departure: undefined,
@@ -192,39 +193,52 @@ const Dashboard = ({data}) => {
     setDashboardData({...dashboardData, prices});
   }
 
-  const {loaded, arrival, departure, priceList, priceLists, rooming, days, prices} = dashboardData;
+  const toggleTable = (event) => {
+    event.preventDefault();
+    const table = !dashboardData.table;
+    setDashboardData({...dashboardData, table});
+  }
+
+  const {loaded, arrival, departure, priceList, priceLists, rooming, days, prices, table} = dashboardData;
   if(loaded) {
     return (
-      <section class="container">
-        <div class="dashboard">
-            <h1 class="my-1">Dashboard</h1>
-            <div class="dashboard-cmd my-1">
-              <Dates
-              updateArrival={updateArrival}
-              updateDeparture={updateDeparture}
-              valueArr={arrival}
-              valueDep={departure}/>
-              <SelectListini
-                priceLists={priceLists}
-                value={priceList}
-                updatePriceList={updatePriceList}/> 
-            </div>
-            <TotalAmount total={totalAmount()}/>
-            <div class="dashboard-prices_columns my-1">
-              <Rooming
-                value={rooming}
-                updateRooming={updateRooming}/>
-              <PricesList
-              prices={prices}
-              days={days}
-              updatePrices={updatePrices}/>
-            </div>
-            <a href="#" class="btn btn-primary my-2">Display resume <i class="fas fa-caret-down"></i></a>
-            <Table 
-              days={days}
-              prices={prices}
-              rooming={rooming}
-              total={totalAmount()}/>
+      <section className="container">
+        <div className="dashboard">
+          <h1 className="my-1">Dashboard</h1>
+          <div className="dashboard-cmd my-1">
+            <Dates
+            updateArrival={updateArrival}
+            updateDeparture={updateDeparture}
+            valueArr={arrival}
+            valueDep={departure}/>
+            <SelectListini
+              label={true}
+              priceLists={priceLists}
+              value={priceList}
+              updatePriceList={updatePriceList}/> 
+          </div>
+          <TotalAmount total={totalAmount()}/>
+          <div className="dashboard-prices_columns my-1">
+            <Rooming
+              value={rooming}
+              updateRooming={updateRooming}/>
+            <PricesList
+            prices={prices}
+            days={days}
+            updatePrices={updatePrices}/>
+          </div>
+          <a 
+            href="!#"
+            onClick={toggleTable}
+            className="btn btn-primary my-2">
+              {table ? "Hide Resume" : "Display Resume"} 
+              <i className={`fas ${table ? "fa-caret-up" : "fa-caret-down"}`}></i>
+          </a>
+          {table && <Table 
+                      days={days}
+                      prices={prices}
+                      rooming={rooming}
+                      total={totalAmount()}/>}  
         </div>
     </section>
     );
