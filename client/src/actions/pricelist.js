@@ -81,7 +81,7 @@ export const changePricelistName = (pricelistId, newName) => async dispatch => {
             payload: res.data
         });
 
-        dispatch(setAlert('Pricelist created', 'success'));
+        dispatch(setAlert('Pricelist name changed', 'success'));
     } catch (err) {
         const errors = err.response.data.errors;
 

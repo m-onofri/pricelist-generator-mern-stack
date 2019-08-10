@@ -28,9 +28,9 @@ const Login = ({login, isAuthenticated}) => {
         <section className="container">
             <Alert />
             <div className="access-container">
-                <h1 className="large text-primary">Sign In</h1>
-                <p className="lead">
-                    <i className="fas fa-user hide-sm"></i>
+                <h1 className="my-1">Sign In</h1>
+                <p>
+                    <i className="fas fa-user hide-sm pr-1"></i>
                     Sign into your account
                 </p>
                 <form className="form" onSubmit={e => onSubmit(e)}>

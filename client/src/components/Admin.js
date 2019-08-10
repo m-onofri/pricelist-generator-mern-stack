@@ -8,10 +8,7 @@ import AdminUpdate from './admin/AdminUpdate';
 import Alert from './Alert';
 
 const Admin = ({admin, getCurrentPricelist}) => {
-    useEffect(() => {
-        getCurrentPricelist();
-    }, [getCurrentPricelist]);
-
+    
     if (!admin.loading) { 
         return (
             <Router>

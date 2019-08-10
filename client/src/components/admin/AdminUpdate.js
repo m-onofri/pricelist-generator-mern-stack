@@ -1,7 +1,7 @@
 import React, {useState, useEffect} from 'react';
 import PropTypes from 'prop-types';
 import SelectListini from '../SelectListini';
-import { addPeriod, deletePeriod, changePricelistName, deletePricelist } from '../../actions/pricelist';
+import { addPeriod, deletePeriod, changePricelistName, deletePricelist, getCurrentPricelist } from '../../actions/pricelist';
 import Spinner from '../Spinner';
 import { connect } from 'react-redux';
 
@@ -20,6 +20,7 @@ const AdminUpdate = ({addPeriod, deletePricelist, deletePeriod, admin, changePri
     });
 
     useEffect(() => {
+        getCurrentPricelist();
         const data = admin.pricelist;
         const priceLists = Object.keys(data);
         console.log(priceLists);
@@ -199,10 +200,10 @@ const AdminUpdate = ({addPeriod, deletePricelist, deletePeriod, admin, changePri
                         <input type="text" name="periodName" value={periodName} required onChange={updateNewPeriodData}/>
                     </div>
                     <div class="input-block">
-                        <input type="date" name="start" value={start} required onChange={updateNewPeriodData}/>
+                        <input style={{"padding": "0.215rem 0"}} type="date" name="start" value={start} required onChange={updateNewPeriodData}/>
                     </div>
                     <div class="input-block">
-                        <input type="date" name="end" value={end} required onChange={updateNewPeriodData}/>
+                        <input type="date" style={{"padding": "0.215rem 0"}} name="end" value={end} required onChange={updateNewPeriodData}/>
                     </div>
                     <div class="input-block">
                         <input type="number" name="ad" step="0.01" value={ad} required min="0" onChange={updateNewPeriodData}/>
@@ -244,7 +245,7 @@ const AdminUpdate = ({addPeriod, deletePricelist, deletePeriod, admin, changePri
         return(
             <section className="container">
                 <div className="admin-update">
-                    <h1 className="my-3">Update Pricelist</h1>
+                    <h1 className="my-1">Update Pricelist</h1>
                     <div className="admin-update-cmd my-1">
                         <SelectListini
                             label={false}
@@ -327,4 +328,4 @@ const mapStateToProps = state => ({
     admin: state.pricelist
  });
 
-export default connect(mapStateToProps, { addPeriod, deletePeriod, changePricelistName, deletePricelist })(AdminUpdate);
+export default connect(mapStateToProps, { addPeriod, deletePeriod, changePricelistName, deletePricelist, getCurrentPricelist })(AdminUpdate);

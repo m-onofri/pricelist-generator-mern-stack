@@ -4,12 +4,11 @@ import Dates from './main_app/Dates';
 import SelectListini from './SelectListini';
 import Rooming from './main_app/Rooming';
 import PricesList from './main_app/PricesList';
-import Table from './main_app/Table';
 import TotalAmount from './main_app/TotalAmount';
-import Spinner from './Spinner'
+import Spinner from './Spinner';
 import './App.css';
+import SeizedTable from './main_app/SizedTable';
 
-//class Dashboard extends Component {
 const Dashboard = ({data}) => {
 
   const [dashboardData, setDashboardData] = useState({
@@ -69,7 +68,7 @@ const Dashboard = ({data}) => {
       priceLists,
       prices
     }));
-  }, []);
+  }, [data]);
 
   //date, startDate, endDate: timestamps (ms)
   const is_included = (date, startDate, endDate) => {
@@ -207,10 +206,10 @@ const Dashboard = ({data}) => {
           <h1 className="my-1">Dashboard</h1>
           <div className="dashboard-cmd my-1">
             <Dates
-            updateArrival={updateArrival}
-            updateDeparture={updateDeparture}
-            valueArr={arrival}
-            valueDep={departure}/>
+              updateArrival={updateArrival}
+              updateDeparture={updateDeparture}
+              valueArr={arrival}
+              valueDep={departure}/>
             <SelectListini
               label={true}
               priceLists={priceLists}
@@ -232,13 +231,15 @@ const Dashboard = ({data}) => {
             onClick={toggleTable}
             className="btn btn-primary my-2">
               {table ? "Hide Resume" : "Display Resume"} 
-              <i className={`fas ${table ? "fa-caret-up" : "fa-caret-down"}`}></i>
+              <i className={`fas ${table ? "fa-caret-up" : "fa-caret-down"} pl-1`}></i>
           </a>
-          {table && <Table 
-                      days={days}
-                      prices={prices}
-                      rooming={rooming}
-                      total={totalAmount()}/>}  
+          {table &&
+            <SeizedTable
+              days={days}
+              prices={prices}
+              rooming={rooming}
+              total={totalAmount()}/>
+          }
         </div>
     </section>
     );

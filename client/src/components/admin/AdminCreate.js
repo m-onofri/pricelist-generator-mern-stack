@@ -84,7 +84,7 @@ const AdminCreate = ({createPricelist, history}) => {
         return(
             <section className="container">
                 <div className="admin-create">
-                    <h1 className="my-3">Create Pricelist</h1>
+                    <h1 className="my-1">Create Pricelist</h1>
                     <div className="admin-create-cmd my-1">
                         <div className="period-name">
                             <label>Name</label><br/>

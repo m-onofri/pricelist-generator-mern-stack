@@ -2,6 +2,7 @@ import React from 'react';
 import Resume from './Resume';
 import PropTypes from 'prop-types';
 import uuid from 'uuid';
+import sizeMe from 'react-sizeme';
 
 const Table = ({rooming, days, prices, total}) => {
 
@@ -13,7 +14,9 @@ const Table = ({rooming, days, prices, total}) => {
     <table className="table">
       <tbody>
         <tr class="header bg-primary">
-          <th>Date</th>
+          <th>From</th>
+          <th>To</th>
+          <th>Days</th>
           {roomingArr.map(([category,]) => <th key={uuid.v4()} >{category}</th>)}
           <th>Total</th>
         </tr>
@@ -34,4 +37,4 @@ Table.propTypes = {
   total: PropTypes.number.isRequired
 }
 
-export default Table;
+export default sizeMe()(Table);
