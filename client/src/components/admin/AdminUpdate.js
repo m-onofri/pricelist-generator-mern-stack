@@ -1,7 +1,7 @@
 import React, {useState, useEffect} from 'react';
 import PropTypes from 'prop-types';
 import SelectListini from '../SelectListini';
-import { addPeriod, deletePeriod, changePricelistName, deletePricelist, getCurrentPricelist } from '../../actions/pricelist';
+import { addPeriod, deletePeriod, changePricelistName, deletePricelist, getCurrentPricelist, setupAdminUpdatePage } from '../../actions/admin';
 import Spinner from '../Spinner';
 import { connect } from 'react-redux';
 
@@ -21,7 +21,8 @@ const AdminUpdate = ({addPeriod, deletePricelist, deletePeriod, admin, changePri
 
     useEffect(() => {
         getCurrentPricelist();
-        const data = admin.pricelist;
+        const data = admin.data;
+        setupAdminUpdatePage(data);
         const priceLists = Object.keys(data);
         const priceList = priceLists[0];
         const priceListId = data[priceList].id;
@@ -37,7 +38,7 @@ const AdminUpdate = ({addPeriod, deletePricelist, deletePeriod, admin, changePri
             priceListId,
             periods
         }));
-    }, [admin.pricelist]);
+    }, [admin.data]);
 
     const twoIntString = value => {
         let stringValue = value.toString();
@@ -54,6 +55,7 @@ const AdminUpdate = ({addPeriod, deletePricelist, deletePeriod, admin, changePri
         const priceList = event.target.value;
         const periods = Object.keys(updateData.data[priceList]);
         const priceListId = updateData.data[priceList].id;
+        //update pricelist action
         setUpdateData({
             ...updateData,
             priceList,
@@ -63,29 +65,29 @@ const AdminUpdate = ({addPeriod, deletePricelist, deletePeriod, admin, changePri
     }
 
     const updateNewPeriodData = event => {
+        const dataName = event.target.name;
+        const dataValue = event.target.value;
+        //updateNewPeriodDataState(dataName, dataValue)
         setUpdateData({
             ...updateData,
-            newPeriodData: { ...updateData.newPeriodData, [event.target.name]: event.target.value }
+            newPeriodData: { ...updateData.newPeriodData, [dataName]: dataValue }
         })
     }
 
-    const displayNewPeriodForm = event => {
+    const toggleNewPeriodForm = event => {
         event.preventDefault();
-        setUpdateData({...updateData, newPeriod: true});
-    }
-
-    const hideNewPeriodForm = event => {
-        event.preventDefault();
-        setUpdateData({...updateData, newPeriod: false});
+        //toggleNewPeriodFormState
+        setUpdateData({...updateData, newPeriod: !updateData.newPeriod});
     }
 
     const valueUpdateHandler = (event, period, isPrices) => {
-        const {data, priceList} = updateData;
+        const {data, priceList} = admin;
         const newData = {...data};
         const name = event.target.name;
         const value = event.target.value;
         if (isPrices) newData[priceList][period]["prices"][name] = value;
         newData[priceList][period][name] = value;
+        //valueUpdateHandlerState(newData)
         setUpdateData({...updateData, data: newData});
     }
 
@@ -231,7 +233,7 @@ const AdminUpdate = ({addPeriod, deletePricelist, deletePeriod, admin, changePri
                         <a href="!#" class="btn btn-success" onClick={(e) => addNewPeriod(e)}>Add</a>
                     </div>
                     <div class="input-block">
-                        <a href="!#" class="btn btn-danger" onClick={(e) => hideNewPeriodForm(e)}>Back</a>
+                        <a href="!#" class="btn btn-danger" onClick={(e) => toggleNewPeriodForm(e)}>Back</a>
                     </div>
                 </div>
             );
@@ -254,7 +256,7 @@ const AdminUpdate = ({addPeriod, deletePricelist, deletePeriod, admin, changePri
                         <a 
                             href="!#"
                             className="btn btn-primary btn-long"
-                            onClick={displayNewPeriodForm}>Add New Period</a>
+                            onClick={toggleNewPeriodForm}>Add New Period</a>
                         <a 
                             href="!#"
                             onClick={removePricelist}
@@ -323,7 +325,7 @@ AdminUpdate.propTypes = {
 }
 
 const mapStateToProps = state => ({
-    admin: state.pricelist
+    admin: state.admin
  });
 
-export default connect(mapStateToProps, { addPeriod, deletePeriod, changePricelistName, deletePricelist, getCurrentPricelist })(AdminUpdate);
+export default connect(mapStateToProps, { addPeriod, deletePeriod, changePricelistName, deletePricelist, getCurrentPricelist, setupAdminUpdatePage })(AdminUpdate);
