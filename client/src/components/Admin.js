@@ -1,16 +1,10 @@
-import React, {useEffect} from 'react';
-import PropTypes from 'prop-types';
+import React from 'react';
 import { Route, Link, BrowserRouter as Router } from 'react-router-dom';
-import { connect } from 'react-redux';
-import { getCurrentPricelist } from '../actions/pricelist';
 import AdminCreate from './admin/AdminCreate';
 import AdminUpdate from './admin/AdminUpdate';
 import Alert from './Alert';
 
-const Admin = ({admin, getCurrentPricelist}) => {
-    
-    if (!admin.loading) { 
-        return (
+const Admin = () => (
             <Router>
                 <div>
                     <div className="admin-navbar bg-dark">
@@ -18,23 +12,10 @@ const Admin = ({admin, getCurrentPricelist}) => {
                         <Link to="/admin/create">Create Price Lists</Link>
                     </div>
                     <Alert />
-                    <Route exact path="/admin" render={() =>  <AdminUpdate data={admin.pricelist} />}  />
+                    <Route exact path="/admin" component = {AdminUpdate} />}  />
                     <Route path="/admin/create" component={AdminCreate} />
                 </div>
             </Router>  
-        )
-    } else {
-        return ("Wait...");
-    }
-}
+        );
 
-Admin.propTypes = {
-    admin: PropTypes.object.isRequired,
-    getCurrentPricelist: PropTypes.func.isRequired
-}
-
-const mapStateToProps = state => ({
-   admin: state.pricelist
-});
-
-export default connect(mapStateToProps, {getCurrentPricelist})(Admin);
+export default Admin;

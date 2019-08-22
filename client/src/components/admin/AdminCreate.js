@@ -34,9 +34,9 @@ const AdminCreate = ({createPricelist, history}) => {
         return stringValue;
     }
 
-    const buttonClickHandler = (event) => {
+    const buttonClickHandler = event => {
         event.preventDefault();
-        let priceList = [];
+        const priceList = [];
         const {periods, name} = createData;
         const todayDate = new Date();
         const todayString = `${todayDate.getFullYear()}-${twoIntString(todayDate.getMonth() + 1)}-${twoIntString(todayDate.getDate())}`;
@@ -56,7 +56,6 @@ const AdminCreate = ({createPricelist, history}) => {
                 culla: "10",
                 sing: "14"}]);
         }
-        console.log(priceList);
         setCreateData({...createData, priceList});
     }
 
@@ -73,9 +72,8 @@ const AdminCreate = ({createPricelist, history}) => {
         setCreateData({...createData, priceList});
     }
 
-    const submitHandler = e => {
-        e.preventDefault();
-        console.log(createData.priceList);
+    const submitHandler = event => {
+        event.preventDefault();
         createPricelist(createData.priceList, history);
     }
 
@@ -145,7 +143,7 @@ const AdminCreate = ({createPricelist, history}) => {
                                 <label>Sup. sing</label>
                             </div>
                         </div>
-                        {createData.priceList.map( (item, index) => {
+                        {createData.priceList.map((item, index) => {
                             return(<Periods
                                     key={index} 
                                     index={item[0]}

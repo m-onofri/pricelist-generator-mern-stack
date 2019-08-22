@@ -3,7 +3,7 @@ import RoomingElement from './RoomingElement';
 import PropTypes from 'prop-types';
 
 const Rooming = ({value, updateRooming}) =>
-  <div class="column rooming-column">
+  <div className="column rooming-column">
     <h3>Rooming</h3>
     <RoomingElement title="Adulti" id="ad" value={value.ad} updateRooming={updateRooming}/>
     <RoomingElement title="Ad 3-4" id="ad34" value={value.ad34} updateRooming={updateRooming}/>

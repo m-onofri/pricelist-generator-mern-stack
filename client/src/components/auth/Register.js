@@ -32,16 +32,16 @@ const Register = ({setAlert, register, isAuthenticated}) => {
     }
 
     return (
-        <section class="container">
+        <section className="container">
             <Alert />
-            <div class="access-container">
-                <h1 class="my-1">Sign Up</h1>
+            <div className="access-container">
+                <h1 className="my-1">Sign Up</h1>
                 <p>
-                    <i class="fas fa-user hide-sm pr-1"></i>
+                    <i className="fas fa-user hide-sm pr-1"></i>
                     Create your account
                 </p>
-                <form class="form" onSubmit={e => onSubmit(e)}>
-                    <div class="form-group">
+                <form className="form" onSubmit={e => onSubmit(e)}>
+                    <div className="form-group">
                         <input 
                             type="text" 
                             placeholder="Name"
@@ -50,7 +50,7 @@ const Register = ({setAlert, register, isAuthenticated}) => {
                             onChange={e => onChange(e)}
                             required />
                     </div>
-                    <div class="form-group">
+                    <div className="form-group">
                         <input 
                             type="email" 
                             placeholder="Email Address"
@@ -58,7 +58,7 @@ const Register = ({setAlert, register, isAuthenticated}) => {
                             value={email}
                             onChange={e => onChange(e)}/>
                     </div>
-                    <div class="form-group">
+                    <div className="form-group">
                         <input 
                             type="password" 
                             placeholder="Password"
@@ -67,7 +67,7 @@ const Register = ({setAlert, register, isAuthenticated}) => {
                             value={password}
                             onChange={e => onChange(e)}/>
                     </div>
-                    <div class="form-group">
+                    <div className="form-group">
                         <input 
                             type="password" 
                             placeholder="Confirm Password"
@@ -79,9 +79,9 @@ const Register = ({setAlert, register, isAuthenticated}) => {
                     <input 
                         type="submit" 
                         value="Register" 
-                        class="btn btn-primary"/>
+                        className="btn btn-primary"/>
                 </form>
-                <p class="my-1">
+                <p className="my-1">
                     Already have an account? <Link to="./login">Sign In</Link>
                 </p>
             </div>

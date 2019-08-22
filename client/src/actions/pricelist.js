@@ -4,8 +4,7 @@ import { setAlert } from './alert';
 import {
     GET_PRICELIST,
     PRICELIST_ERROR,
-    CREATE_PRICELIST,
-    CHANGE_PRICELIST_NAME
+    CREATE_PRICELIST
 } from './types';
 
 

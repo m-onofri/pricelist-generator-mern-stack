@@ -59,7 +59,7 @@ const Login = ({login, isAuthenticated}) => {
                     />
                 </form>
                 <p className="my-1">
-                    Don't have an account? <a href="/register">Sign Up</a>
+                    Don't have an account? <Link to="/register">Sign Up</Link>
                 </p>
             </div>
         </section>

@@ -23,7 +23,6 @@ const AdminUpdate = ({addPeriod, deletePricelist, deletePeriod, admin, changePri
         getCurrentPricelist();
         const data = admin.pricelist;
         const priceLists = Object.keys(data);
-        console.log(priceLists);
         const priceList = priceLists[0];
         const priceListId = data[priceList].id;
         const periods = Object.keys(data[priceList]).filter(x => x !== 'id');
@@ -90,7 +89,7 @@ const AdminUpdate = ({addPeriod, deletePricelist, deletePeriod, admin, changePri
         setUpdateData({...updateData, data: newData});
     }
 
-    const addNewPeriod = (event) => {
+    const addNewPeriod = event => {
         event.preventDefault();
         addPeriod(updateData.newPeriodData, updateData.priceListId, undefined);
     }
@@ -193,7 +192,6 @@ const AdminUpdate = ({addPeriod, deletePricelist, deletePeriod, admin, changePri
     const newPeriod = () => {
         if (updateData.newPeriod) {
             const {periodName, start, end, ad, ad34, chd3, chd4, inf, culla, animal, sing} = updateData.newPeriodData;
-            console.log(animal);
             return(
                 <div class="column price-column">
                     <div class="input-block">

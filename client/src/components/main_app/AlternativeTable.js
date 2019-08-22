@@ -52,7 +52,7 @@ const renderDate = timestamp => {
                         </div>
                     </div>);
     }
-    result.push(<div key={uuid.v4()} className="t-row" >
+    result.push(<div key={uuid.v4()} className="t-resume" >
                     <div class="t-head">
                         <h3>From</h3>
                         <h3>To</h3>
@@ -65,7 +65,7 @@ const renderDate = timestamp => {
                         <h3>{renderDate(lastDay)}</h3>
                         <h3>{totalDays}</h3>
                             {rooming.map(([category, number]) => <h3 key={uuid.v4()}>{number} {category}</h3>)}
-                        <h3>{total} €</h3>
+                        <h3>{total} € x {totalDays} day(s)</h3>
                     </div>
                 </div>);
     return result;

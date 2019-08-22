@@ -2,13 +2,14 @@ import React from 'react';
 import PropTypes from 'prop-types';
 
 const RoomingElement = ({title, id, value, updateRooming}) =>
-  <div class="input-block">
-    <label for="">{title}</label>
+  <div className="input-block">
+    <label>{title}</label>
     <input 
     type="number"
     id={id}
     value={value} 
     onChange={updateRooming}
+    min="0"
     />
   </div>
 

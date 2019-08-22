@@ -1,4 +1,4 @@
-import { GET_PRICELIST, PRICELIST_ERROR, CREATE_PRICELIST, CHANGE_PRICELIST_NAME } from "../actions/types";
+import { GET_PRICELIST, PRICELIST_ERROR, CREATE_PRICELIST, CHANGE_PRICELIST_NAME } from "../actions/types"; 
 
 const initialState = {
     pricelist: null,

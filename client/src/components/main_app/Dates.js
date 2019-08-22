@@ -20,7 +20,7 @@ const Dates = ({valueArr, updateArrival, valueDep, updateDeparture}) => {
   return (
     <>
     <div className="arrival">
-        <label for="start">Arrival</label><br/>
+        <label>Arrival</label><br/>
         <input 
           type="date" 
           className="styled-input" 
@@ -28,11 +28,11 @@ const Dates = ({valueArr, updateArrival, valueDep, updateDeparture}) => {
           value={dateValue(valueArr)}
           onChange={updateArrival}/>
     </div>
-    <div class="departure">
-        <label for="end">Departure</label><br/>
+    <div className="departure">
+        <label>Departure</label><br/>
         <input 
           type="date" 
-          class="styled-input" 
+          className="styled-input" 
           id="end" 
           value={dateValue(valueDep)}
           onChange={updateDeparture}/>

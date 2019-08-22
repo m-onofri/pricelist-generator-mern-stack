@@ -25,8 +25,10 @@ function SizedTable({days, prices, rooming, total}) {
   }, [roomingArr.length]);
 
   const onSize = size => {
+    const overMargin = window.innerWidth < 1100 ? 80 : 265;
+
     setTableData({
-      display: size.width + 80 < window.innerWidth,
+      display: size.width + overMargin < window.innerWidth,
       width: size.width,
       maxFields: 4 + roomingArr.length
     }); 
@@ -49,6 +51,13 @@ function SizedTable({days, prices, rooming, total}) {
       }
     </div>
   );
+}
+
+SizedTable.propTypes = {
+  days: PropTypes.array.isRequired,
+  prices: PropTypes.array.isRequired,
+  rooming: PropTypes.object.isRequired,
+  total: PropTypes.number.isRequired
 }
 
 export default SizedTable;

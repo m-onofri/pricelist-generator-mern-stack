@@ -68,7 +68,7 @@ const Dashboard = ({data}) => {
       priceLists,
       prices
     }));
-  }, [data]);
+  }, [data  ]);
 
   //date, startDate, endDate: timestamps (ms)
   const is_included = (date, startDate, endDate) => {

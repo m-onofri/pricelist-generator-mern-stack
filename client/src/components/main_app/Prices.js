@@ -13,53 +13,53 @@ const Prices = ({days, id, value, updatePrices}) => {
   }
 
   return(
-    <div class="column price-column" id={id}>
+    <div className="column price-column" id={id}>
       <h3>Days: {daysNumber}</h3>
       <p>from {renderDate(firstDay)}</p>
       <p>to {renderDate(lastDay)}</p>
-      <div class="input-block">
+      <div className="input-block">
           <input 
             type="number"
             id="ad"
             value={value.ad} 
             onChange={updatePrices}/>
       </div>
-      <div class="input-block">
+      <div className="input-block">
           <input 
             type="number"
             id="ad34"
             value={value.ad34} 
             onChange={updatePrices}/>
       </div>
-      <div class="input-block">
+      <div className="input-block">
           <input 
             type="number"
             id="chd3" 
             value={value.chd3} 
             onChange={updatePrices}/>
       </div>
-      <div class="input-block">
+      <div className="input-block">
           <input 
             type="number"
             id="chd4"
             value={value.chd4}
             onChange={updatePrices}/>
       </div>
-      <div class="input-block">
+      <div className="input-block">
           <input 
             type="number"
             id="inf"
             value={value.inf}
             onChange={updatePrices}/>
       </div>
-      <div class="input-block">
+      <div className="input-block">
           <input 
             type="number"
             id="animal"
             value={value.animal}
             onChange={updatePrices}/>
       </div>
-      <div class="input-block">
+      <div className="input-block">
           <input 
             type="number" 
             id="culla"
@@ -67,7 +67,7 @@ const Prices = ({days, id, value, updatePrices}) => {
             onChange={updatePrices}
             />
       </div>
-      <div class="input-block">
+      <div className="input-block">
           <input 
             type="number"
             id="sing"

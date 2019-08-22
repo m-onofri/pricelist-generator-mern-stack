@@ -6,7 +6,7 @@ import PropTypes from 'prop-types';
 
 const Navbar = ({ auth: { isAuthenticated, loading}, logout }) => {
     const authLinks = (
-        <nav class="navbar bg-dark">
+        <nav className="navbar bg-dark">
             <h1>
                 <a href="/app">
                     PQGenerator
@@ -22,7 +22,7 @@ const Navbar = ({ auth: { isAuthenticated, loading}, logout }) => {
     );
 
     const guestLinks = (
-        <nav class="navbar bg-dark">
+        <nav className="navbar bg-dark">
             <h1>
                 <a href="/app">
                     PQGenerator

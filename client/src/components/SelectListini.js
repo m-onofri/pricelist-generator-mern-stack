@@ -2,9 +2,9 @@ import React from 'react';
 import PropTypes from 'prop-types';
 
 const SelectListini = ({updatePriceList, value, priceLists, label}) =>
-  <div class="pricelists">
-    {label && <><label for="pricelist">Pricelists</label><br/></>}
-    <div class="styled-select">
+  <div className="pricelists">
+    {label && <><label>Pricelists</label><br/></>}
+    <div className="styled-select">
       <select
         id="listini"
         name="listini"
