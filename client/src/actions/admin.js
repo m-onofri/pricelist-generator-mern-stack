@@ -9,10 +9,10 @@ import {
     UPDATE_PRICELIST_STATE,
     UPDATE_NEWPERIODDATA_STATE,
     TOGGLE_NEWPERIODFORM,
-    DATA_UPDATEHANDLER
+    DATA_UPDATEHANDLER,
+    SYNC_NEWNAME
 } from './types';
 
-//Get current users pricelist
 export const getCurrentPricelist = () => async dispatch => {
     try {
         const res = await axios.get('/api/pricelist');
@@ -29,46 +29,89 @@ export const getCurrentPricelist = () => async dispatch => {
     }
 };
 
-//Setup the initial state
-export const setupAdminUpdatePage = data => dispatch => {
-    const priceLists = Object.keys(data);
-    const priceList = priceLists[0];
-    const priceListId = data[priceList].id;
-    const periods = Object.keys(data[priceList]).filter(x => x !== 'id');
+//Get current users pricelist
+export const setupAdminUpdatePage= () => async dispatch => {
+    try {
+        const res = await axios.get('/api/pricelist');
+        const data = res.data;
 
-    const updatedState = {
-        loaded: true,
-        data,
-        priceLists,
-        newPricelistName: "New Pricelist Name",
-        newPeriod: false,
-        priceList,
-        priceListId,
-        periods,
-        loading: true,
-        error: {},
-        newPeriodData: {periodName: "", start: "", end: "", ad: 0, ad34: 0, chd3: 0, chd4: 0, inf: 0, culla: 10, animal: 5, sing: 14}
+        const priceLists = Object.keys(data);
+        const priceList = priceLists[0];
+        const priceListId = data[priceList].id;
+        const periods = Object.keys(data[priceList]).filter(x => x !== 'id');
+        const updatedState = {
+            loaded: true,
+            data,
+            priceLists,
+            newPricelistName: "New Pricelist Name",
+            newPeriod: false,
+            priceList,
+            priceListId,
+            periods,
+            loading: true,
+            error: {},
+            newPeriodData: {periodName: "", start: "", end: "", ad: 0, ad34: 0, chd3: 0, chd4: 0, inf: 0, culla: 10, animal: 5, sing: 14}
+        }
+
+        dispatch({
+            type: SETUP_ADMINUPDATE,
+            payload: updatedState
+        });
+    } catch (err) {
+        dispatch({
+            type: PRICELIST_ERROR,
+            payload: { msg: err.response.statusText, status: err.response.status }
+        });
     }
-
-    dispatch({
-        type: SETUP_ADMINUPDATE,
-        payload: updatedState
-    });
-
 };
 
+//Setup the initial state
+// export const setupAdminUpdatePage = data => dispatch => {
+//     const priceLists = Object.keys(data);
+//     const priceList = priceLists[0];
+//     const priceListId = data[priceList].id;
+//     const periods = Object.keys(data[priceList]).filter(x => x !== 'id');
+
+//     const updatedState = {
+//         loaded: true,
+//         data,
+//         priceLists,
+//         newPricelistName: "New Pricelist Name",
+//         newPeriod: false,
+//         priceList,
+//         priceListId,
+//         periods,
+//         loading: true,
+//         error: {},
+//         newPeriodData: {periodName: "", start: "", end: "", ad: 0, ad34: 0, chd3: 0, chd4: 0, inf: 0, culla: 10, animal: 5, sing: 14}
+//     }
+
+//     dispatch({
+//         type: SETUP_ADMINUPDATE,
+//         payload: updatedState
+//     });
+
+// };
+
 //Update pricelist in the state
-export const updatePriceListState = newData => dispatch => {
+export const updatePriceListState = (event, data) => dispatch => {
+
+    const priceList = event.target.value;
+    const periods = Object.keys(data[priceList]);
+    const priceListId = data[priceList].id;
 
     dispatch({
         type: UPDATE_PRICELIST_STATE,
-        payload: newData
+        payload: {priceList, periods, priceListId}
     });
 
 };
 
 //Update newPeriod in the state
-export const updateNewPeriodDataState = (dataName, dataValue) => dispatch => {
+export const updateNewPeriodDataState = (event) => dispatch => {
+
+    const dataName = event.target.name;
+    const dataValue = event.target.value;
 
     dispatch({
         type: UPDATE_NEWPERIODDATA_STATE,
@@ -78,7 +121,14 @@ export const updateNewPeriodDataState = (dataName, dataValue) => dispatch => {
 };
 
 //Update data in the state
-export const valueUpdateHandlerState = (newData) => dispatch => {
+export const valueUpdateHandlerState = (event, period, isPrices, admin) => dispatch => {
+
+    const {data, priceList} = admin;
+    const newData = {...data};
+    const name = event.target.name;
+    const value = event.target.value;
+    if (isPrices) newData[priceList][period]["prices"][name] = value;
+    newData[priceList][period][name] = value;
 
     dispatch({
         type: DATA_UPDATEHANDLER,
@@ -88,10 +138,24 @@ export const valueUpdateHandlerState = (newData) => dispatch => {
 };
 
 //Toggle newPeriod in the state
-export const toggleNewPeriodFormState = () => dispatch => {
+export const toggleNewPeriodFormState = (event) => dispatch => {
+    event.preventDefault();
 
     dispatch({
         type: TOGGLE_NEWPERIODFORM
+    });
+
+};
+
+//Toggle newPeriod in the state
+export const syncNewNameState = event => dispatch => {
+
+    event.preventDefault();
+    const newPricelistName = event.target.value;
+
+    dispatch({
+        type: SYNC_NEWNAME,
+        payload: newPricelistName
     });
 
 };

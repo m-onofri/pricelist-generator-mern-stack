@@ -1,4 +1,4 @@
-import { GET_PRICELIST, PRICELIST_ERROR, CREATE_PRICELIST, CHANGE_PRICELIST_NAME, SETUP_ADMINUPDATE, UPDATE_PRICELIST, UPDATE_NEWPERIODDATA_STATE, TOGGLE_NEWPERIODFORM, DATA_UPDATEHANDLER } from "../actions/types"; 
+import { GET_PRICELIST, PRICELIST_ERROR, CREATE_PRICELIST, CHANGE_PRICELIST_NAME, SETUP_ADMINUPDATE, UPDATE_PRICELIST_STATE, UPDATE_NEWPERIODDATA_STATE, TOGGLE_NEWPERIODFORM, DATA_UPDATEHANDLER, SYNC_NEWNAME } from "../actions/types"; 
 
 const initialState = {
     data: null,
@@ -28,7 +28,7 @@ export default function(state = initialState, action) {
             return {
                 ...payload
             }
-        case UPDATE_PRICELIST:
+        case UPDATE_PRICELIST_STATE:
             return {
                 ...state,
                 priceList: payload.priceList,
@@ -45,11 +45,16 @@ export default function(state = initialState, action) {
                 ...state,
                 newPeriod: !state.newPeriod
             }
-            case DATA_UPDATEHANDLER:
-                return {
-                    ...state,
-                    data: payload
-                }
+        case DATA_UPDATEHANDLER:
+            return {
+                ...state,
+                data: payload
+            }
+        case SYNC_NEWNAME:
+            return {
+                ...state,
+                newPricelistName: payload
+            }
         case PRICELIST_ERROR:
             return {
                 ...state,

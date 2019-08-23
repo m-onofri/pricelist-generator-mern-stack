@@ -1,44 +1,21 @@
-import React, {useState, useEffect} from 'react';
+import React from 'react';
 import PropTypes from 'prop-types';
 import SelectListini from '../SelectListini';
-import { addPeriod, deletePeriod, changePricelistName, deletePricelist, getCurrentPricelist, setupAdminUpdatePage } from '../../actions/admin';
 import Spinner from '../Spinner';
 import { connect } from 'react-redux';
+import { 
+    addPeriod, 
+    deletePeriod, 
+    changePricelistName, 
+    deletePricelist, 
+    updatePriceListState,
+    toggleNewPeriodFormState,
+    updateNewPeriodDataState,
+    syncNewNameState,
+    valueUpdateHandlerState
+} from '../../actions/admin';
 
-const AdminUpdate = ({addPeriod, deletePricelist, deletePeriod, admin, changePricelistName}) => {
-
-    const [updateData, setUpdateData] = useState({
-        loaded: false,
-        newPeriod: false,
-        data: undefined,
-        newPeriodData: {periodName: "", start: "", end: "", ad: 0, ad34: 0, chd3: 0, chd4: 0, inf: 0, culla: 10, animal: 5, sing: 14},
-        priceList: "",
-        newPricelistName: "",
-        priceListId: "",
-        priceLists: [],
-        periods: []
-    });
-
-    useEffect(() => {
-        getCurrentPricelist();
-        const data = admin.data;
-        setupAdminUpdatePage(data);
-        const priceLists = Object.keys(data);
-        const priceList = priceLists[0];
-        const priceListId = data[priceList].id;
-        const periods = Object.keys(data[priceList]).filter(x => x !== 'id');
-        setUpdateData(u => ({
-            ...u,
-            loaded: true,
-            data,
-            priceLists,
-            newPricelistName: "New Pricelist Name",
-            newPeriod: false,
-            priceList,
-            priceListId,
-            periods
-        }));
-    }, [admin.data]);
+const AdminUpdate = ({addPeriod, deletePricelist, deletePeriod, admin, changePricelistName, updatePriceListState, toggleNewPeriodFormState, updateNewPeriodDataState, syncNewNameState, valueUpdateHandlerState}) => {
 
     const twoIntString = value => {
         let stringValue = value.toString();
@@ -51,77 +28,31 @@ const AdminUpdate = ({addPeriod, deletePricelist, deletePeriod, admin, changePri
         return `${date.getFullYear()}-${twoIntString(date.getMonth() + 1)}-${twoIntString(date.getDate())}`;
       }
 
-    const updatePriceList = event => {
-        const priceList = event.target.value;
-        const periods = Object.keys(updateData.data[priceList]);
-        const priceListId = updateData.data[priceList].id;
-        //update pricelist action
-        setUpdateData({
-            ...updateData,
-            priceList,
-            priceListId,
-            periods
-        });
-    }
-
-    const updateNewPeriodData = event => {
-        const dataName = event.target.name;
-        const dataValue = event.target.value;
-        //updateNewPeriodDataState(dataName, dataValue)
-        setUpdateData({
-            ...updateData,
-            newPeriodData: { ...updateData.newPeriodData, [dataName]: dataValue }
-        })
-    }
-
-    const toggleNewPeriodForm = event => {
-        event.preventDefault();
-        //toggleNewPeriodFormState
-        setUpdateData({...updateData, newPeriod: !updateData.newPeriod});
-    }
-
-    const valueUpdateHandler = (event, period, isPrices) => {
-        const {data, priceList} = admin;
-        const newData = {...data};
-        const name = event.target.name;
-        const value = event.target.value;
-        if (isPrices) newData[priceList][period]["prices"][name] = value;
-        newData[priceList][period][name] = value;
-        //valueUpdateHandlerState(newData)
-        setUpdateData({...updateData, data: newData});
-    }
-
     const addNewPeriod = event => {
         event.preventDefault();
-        addPeriod(updateData.newPeriodData, updateData.priceListId, undefined);
+        addPeriod(admin.newPeriodData, admin.priceListId, undefined);
     }
 
     const deleteCurrentPeriod = (event, periodId) => {
         event.preventDefault();
-        deletePeriod(periodId, updateData.priceListId);
-    }
-
-    const syncNewName = (event) => {
-        event.preventDefault();
-        const newPricelistName = event.target.value;
-        setUpdateData({...updateData, newPricelistName});
+        deletePeriod(periodId, admin.priceListId);
     }
 
     const updatePricelistName = event => {
         event.preventDefault();
-        changePricelistName(updateData.priceListId, updateData.newPricelistName);
+        changePricelistName(admin.priceListId, admin.newPricelistName);
     }
 
     const removePricelist = event => {
         event.preventDefault();
         if (window.confirm('Are you sure? This can NOT be undone!')) {
-            deletePricelist(updateData.priceListId);
+            deletePricelist(admin.priceListId);
         }
     }
 
     const submitHandler = (event, periodId) => {
         event.preventDefault();
-        const period = Object.values(updateData.data[updateData.priceList]).filter(p => p._id === periodId)[0];
+        const period = Object.values(admin.data[admin.priceList]).filter(p => p._id === periodId)[0];
         const updatedPeriod = {
             periodName: period.periodName,
             start: period.start,
@@ -135,11 +66,11 @@ const AdminUpdate = ({addPeriod, deletePricelist, deletePeriod, admin, changePri
             animal: period.prices.animal,
             sing: period.prices.sing
         }
-        addPeriod(updatedPeriod, updateData.priceListId, periodId);
+        addPeriod(updatedPeriod, admin.priceListId, periodId);
     }
 
     const displayPriceLists = () => {
-        const {periods, priceList, data} = updateData;
+        const {periods, priceList, data} = admin;
         const priceLists = Object.values(data[priceList]);
         
         return priceLists
@@ -148,37 +79,37 @@ const AdminUpdate = ({addPeriod, deletePricelist, deletePeriod, admin, changePri
             return (
                 <div class="column price-column">
                     <div class="input-block">
-                        <input type="text" value={p.periodName} name="periodName" onChange={(e) => valueUpdateHandler(e, periods[i], false)} required />
+                        <input type="text" value={p.periodName} name="periodName" onChange={(e) => valueUpdateHandlerState(e, periods[i], false, admin)} required />
                     </div>
                     <div class="input-block">
-                        <input style={{"padding": "0.215rem 0"}} type="date" value={dateValue(p.start)} name="start" onChange={(e) => valueUpdateHandler(e, periods[i], false)} required/>
+                        <input style={{"padding": "0.215rem 0"}} type="date" value={dateValue(p.start)} name="start" onChange={(e) => valueUpdateHandlerState(e, periods[i], false, admin)} required/>
                     </div>
                     <div class="input-block">
-                        <input style={{"padding": "0.215rem 0"}} type="date" value={dateValue(p.end)} name="end" onChange={(e) => valueUpdateHandler(e, periods[i], false)} required/>
+                        <input style={{"padding": "0.215rem 0"}} type="date" value={dateValue(p.end)} name="end" onChange={(e) => valueUpdateHandlerState(e, periods[i], false, admin)} required/>
                     </div>
                     <div class="input-block">
-                        <input type="number" value={p.prices.ad} name="ad" step="0.01" onChange={(e) => valueUpdateHandler(e, periods[i], true)} required min="0"/>
+                        <input type="number" value={p.prices.ad} name="ad" step="0.01" onChange={(e) => valueUpdateHandlerState(e, periods[i], true, admin)} required min="0"/>
                     </div>
                     <div class="input-block">
-                        <input type="number" value={p.prices.ad34} name="ad34" step="0.01" onChange={(e) => valueUpdateHandler(e, periods[i], true)} required min="0" />
+                        <input type="number" value={p.prices.ad34} name="ad34" step="0.01" onChange={(e) => valueUpdateHandlerState(e, periods[i], true, admin)} required min="0" />
                     </div>
                     <div class="input-block">
-                        <input type="number" value={p.prices.chd3} name="chd3" step="0.01" onChange={(e) => valueUpdateHandler(e, periods[i], true)} required min="0"/>
+                        <input type="number" value={p.prices.chd3} name="chd3" step="0.01" onChange={(e) => valueUpdateHandlerState(e, periods[i], true, admin)} required min="0"/>
                     </div>
                     <div class="input-block">
-                        <input type="number" value={p.prices.chd4} name="chd4" step="0.01" onChange={(e) => valueUpdateHandler(e, periods[i], true)} required min="0"/>
+                        <input type="number" value={p.prices.chd4} name="chd4" step="0.01" onChange={(e) => valueUpdateHandlerState(e, periods[i], true, admin)} required min="0"/>
                     </div>
                     <div class="input-block">
-                        <input type="number" value={p.prices.inf} name="inf" step="0.01" onChange={(e) => valueUpdateHandler(e, periods[i], true)} required min="0"/>
+                        <input type="number" value={p.prices.inf} name="inf" step="0.01" onChange={(e) => valueUpdateHandlerState(e, periods[i], true, admin)} required min="0"/>
                     </div>
                     <div class="input-block">
-                        <input type="number" value={p.prices.culla} name="culla" step="0.01" onChange={(e) => valueUpdateHandler(e, periods[i], true)} required min="0"/>
+                        <input type="number" value={p.prices.culla} name="culla" step="0.01" onChange={(e) => valueUpdateHandlerState(e, periods[i], true, admin)} required min="0"/>
                     </div>
                     <div class="input-block">
-                        <input type="number" value={p.prices.animal} name="animal" step="0.01" onChange={(e) => valueUpdateHandler(e, periods[i], true)} required min="0"/>
+                        <input type="number" value={p.prices.animal} name="animal" step="0.01" onChange={(e) => valueUpdateHandlerState(e, periods[i], true, admin)} required min="0"/>
                     </div>
                     <div class="input-block">
-                        <input type="number" value={p.prices.sing} name="sing" step="0.01" onChange={(e) => valueUpdateHandler(e, periods[i], true)} required min="0"/>
+                        <input type="number" value={p.prices.sing} name="sing" step="0.01" onChange={(e) => valueUpdateHandlerState(e, periods[i], true, admin)} required min="0"/>
                     </div>
                     <div class="input-block">
                         <a href="!#" class="btn btn-primary" id={p._id} onClick={(e) => submitHandler(e, p._id)}>Update</a>
@@ -192,55 +123,55 @@ const AdminUpdate = ({addPeriod, deletePricelist, deletePeriod, admin, changePri
     }
 
     const newPeriod = () => {
-        if (updateData.newPeriod) {
-            const {periodName, start, end, ad, ad34, chd3, chd4, inf, culla, animal, sing} = updateData.newPeriodData;
+        if (admin.newPeriod) {
+            const {periodName, start, end, ad, ad34, chd3, chd4, inf, culla, animal, sing} = admin.newPeriodData;
             return(
                 <div class="column price-column">
                     <div class="input-block">
-                        <input type="text" name="periodName" value={periodName} required onChange={updateNewPeriodData}/>
+                        <input type="text" name="periodName" value={periodName} required onChange={updateNewPeriodDataState}/>
                     </div>
                     <div class="input-block">
-                        <input style={{"padding": "0.215rem 0"}} type="date" name="start" value={start} required onChange={updateNewPeriodData}/>
+                        <input style={{"padding": "0.215rem 0"}} type="date" name="start" value={start} required onChange={updateNewPeriodDataState}/>
                     </div>
                     <div class="input-block">
-                        <input type="date" style={{"padding": "0.215rem 0"}} name="end" value={end} required onChange={updateNewPeriodData}/>
+                        <input type="date" style={{"padding": "0.215rem 0"}} name="end" value={end} required onChange={updateNewPeriodDataState}/>
                     </div>
                     <div class="input-block">
-                        <input type="number" name="ad" step="0.01" value={ad} required min="0" onChange={updateNewPeriodData}/>
+                        <input type="number" name="ad" step="0.01" value={ad} required min="0" onChange={updateNewPeriodDataState}/>
                     </div>
                     <div class="input-block">
-                        <input type="number" name="ad34" step="0.01" value={ad34} required min="0" onChange={updateNewPeriodData}/>
+                        <input type="number" name="ad34" step="0.01" value={ad34} required min="0" onChange={updateNewPeriodDataState}/>
                     </div>
                     <div class="input-block">
-                        <input type="number" name="chd3" step="0.01" value={chd3} required min="0" onChange={updateNewPeriodData}/>
+                        <input type="number" name="chd3" step="0.01" value={chd3} required min="0" onChange={updateNewPeriodDataState}/>
                     </div>
                     <div class="input-block">
-                        <input type="number" name="chd4" step="0.01" value={chd4} required min="0" onChange={updateNewPeriodData}/>
+                        <input type="number" name="chd4" step="0.01" value={chd4} required min="0" onChange={updateNewPeriodDataState}/>
                     </div>
                     <div class="input-block">
-                        <input type="number" name="inf" step="0.01" value={inf} required min="0"onChange={updateNewPeriodData}/>
+                        <input type="number" name="inf" step="0.01" value={inf} required min="0"onChange={updateNewPeriodDataState}/>
                     </div>
                     <div class="input-block">
-                        <input type="number" name="culla" step="0.01" value={culla} required min="0" onChange={updateNewPeriodData}/>
+                        <input type="number" name="culla" step="0.01" value={culla} required min="0" onChange={updateNewPeriodDataState}/>
                     </div>
                     <div class="input-block">
-                        <input type="number" name="animal" step="0.01" value={animal} required min="0" onChange={updateNewPeriodData}/>
+                        <input type="number" name="animal" step="0.01" value={animal} required min="0" onChange={updateNewPeriodDataState}/>
                     </div>
                     <div class="input-block">
-                        <input type="number" name="sing" step="0.01" value={sing} required min="0" onChange={updateNewPeriodData}/>
+                        <input type="number" name="sing" step="0.01" value={sing} required min="0" onChange={updateNewPeriodDataState}/>
                     </div>
                     <div class="input-block">
                         <a href="!#" class="btn btn-success" onClick={(e) => addNewPeriod(e)}>Add</a>
                     </div>
                     <div class="input-block">
-                        <a href="!#" class="btn btn-danger" onClick={(e) => toggleNewPeriodForm(e)}>Back</a>
+                        <a href="!#" class="btn btn-danger" onClick={toggleNewPeriodFormState}>Back</a>
                     </div>
                 </div>
             );
         }
     }
 
-    const {loaded, priceLists, priceList, newPricelistName} = updateData;
+    const {loaded, priceLists, priceList, newPricelistName} = admin;
     if (loaded) {
         return(
             <section className="container">
@@ -251,12 +182,13 @@ const AdminUpdate = ({addPeriod, deletePricelist, deletePeriod, admin, changePri
                             label={false}
                             priceLists={priceLists}
                             value={priceList}
-                            updatePriceList={updatePriceList}
+                            data={admin.data}
+                            updatePriceList={updatePriceListState}
                         />
                         <a 
                             href="!#"
                             className="btn btn-primary btn-long"
-                            onClick={toggleNewPeriodForm}>Add New Period</a>
+                            onClick={toggleNewPeriodFormState}>Add New Period</a>
                         <a 
                             href="!#"
                             onClick={removePricelist}
@@ -266,7 +198,7 @@ const AdminUpdate = ({addPeriod, deletePricelist, deletePeriod, admin, changePri
                                 className="styled-input"
                                 type="text"
                                 value={newPricelistName}
-                                onChange={syncNewName}/>
+                                onChange={syncNewNameState}/>
                         </div>
                         <a 
                             href="!#"
@@ -276,37 +208,37 @@ const AdminUpdate = ({addPeriod, deletePricelist, deletePeriod, admin, changePri
                     <div className="admin-update-prices_columns my-1">
                         <div className="column rooming-column">
                             <div class="input-block">
-                                <label for="">Period</label>
+                                <label>Period</label>
                             </div>
                             <div class="input-block">
-                                <label for="">From</label>
+                                <label>From</label>
                             </div>
                             <div class="input-block">
-                                <label for="">To</label>
+                                <label>To</label>
                             </div>
                             <div class="input-block">
-                                <label for="">Adulti</label>
+                                <label>Adulti</label>
                             </div>
                             <div class="input-block">
-                                <label for="">Ad 3-4</label>
+                                <label>Ad 3-4</label>
                             </div>
                             <div class="input-block">
-                                <label for="">Chd 3</label>
+                                <label>Chd 3</label>
                             </div>
                             <div class="input-block">
-                                <label for="">Chd 4</label>
+                                <label>Chd 4</label>
                             </div>
                             <div class="input-block">
-                                <label for="">Infant</label>
+                                <label>Infant</label>
                             </div>
                             <div class="input-block">
-                                <label for="">Culla</label>
+                                <label>Culla</label>
                             </div>
                             <div class="input-block">
-                                <label for="">Animal</label>
+                                <label>Animal</label>
                             </div>
                             <div class="input-block">
-                                <label for="">Sup. sing</label>
+                                <label>Sup. sing</label>
                             </div>
                         </div>
                         {displayPriceLists()}
@@ -328,4 +260,4 @@ const mapStateToProps = state => ({
     admin: state.admin
  });
 
-export default connect(mapStateToProps, { addPeriod, deletePeriod, changePricelistName, deletePricelist, getCurrentPricelist, setupAdminUpdatePage })(AdminUpdate);
+export default connect(mapStateToProps, { addPeriod, deletePeriod, changePricelistName, deletePricelist, updatePriceListState,toggleNewPeriodFormState, updateNewPeriodDataState, syncNewNameState, valueUpdateHandlerState })(AdminUpdate);
