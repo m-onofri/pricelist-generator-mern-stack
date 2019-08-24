@@ -143,19 +143,8 @@ router.post('/update/:pricelist_id', [auth, [
             name: newName.toUpperCase()}
         },{multi:true,new:true});
         console.log("Pricelist name changed!");
-        
-        const data = await PriceList.find({user: req.user.id});
-        const listino = data.reduce((obj, item) => {
-            obj[item.name] = item.periods.reduce((obj1, period) => {
-                obj1[period.periodName] = period;
-                return obj1;
-            }, {});
-            return obj;
-        }, {});
 
-        data.map(d => listino[d.name].id = d._id);
-
-        res.send(listino);
+        res.send("Pricelist name changed!");
     } catch (err) {
         console.error(err.message);
         res.status(500).send('Server error');
@@ -171,18 +160,7 @@ router.post('/delete/:pricelist_id', auth, async (req, res) => {
 
         console.log("Price List Deleted");
 
-        const data = await PriceList.find({user: req.user.id});
-        const listino = data.reduce((obj, item) => {
-            obj[item.name] = item.periods.reduce((obj1, period) => {
-                obj1[period.periodName] = period;
-                return obj1;
-            }, {});
-            return obj;
-        }, {});
-
-        data.map(d => listino[d.name].id = d._id);
-
-        res.send(listino);
+        res.send("Price List Deleted");
     } catch(err) {
         console.error(err.message);
         res.status(500).send('Server error');

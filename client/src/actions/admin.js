@@ -34,7 +34,6 @@ export const setupAdminUpdatePage= () => async dispatch => {
     try {
         const res = await axios.get('/api/pricelist');
         const data = res.data;
-
         const priceLists = Object.keys(data);
         const priceList = priceLists[0];
         const priceListId = data[priceList].id;
@@ -64,34 +63,6 @@ export const setupAdminUpdatePage= () => async dispatch => {
         });
     }
 };
-
-//Setup the initial state
-// export const setupAdminUpdatePage = data => dispatch => {
-//     const priceLists = Object.keys(data);
-//     const priceList = priceLists[0];
-//     const priceListId = data[priceList].id;
-//     const periods = Object.keys(data[priceList]).filter(x => x !== 'id');
-
-//     const updatedState = {
-//         loaded: true,
-//         data,
-//         priceLists,
-//         newPricelistName: "New Pricelist Name",
-//         newPeriod: false,
-//         priceList,
-//         priceListId,
-//         periods,
-//         loading: true,
-//         error: {},
-//         newPeriodData: {periodName: "", start: "", end: "", ad: 0, ad34: 0, chd3: 0, chd4: 0, inf: 0, culla: 10, animal: 5, sing: 14}
-//     }
-
-//     dispatch({
-//         type: SETUP_ADMINUPDATE,
-//         payload: updatedState
-//     });
-
-// };
 
 //Update pricelist in the state
 export const updatePriceListState = (event, data) => dispatch => {
@@ -198,7 +169,7 @@ export const createPricelist = (newPricelist, history) => async dispatch => {
 
 //Change the pricelist name
 export const changePricelistName = (pricelistId, newName) => async dispatch => {
-
+    
     try {
         const config = {
             headers: {
@@ -208,12 +179,9 @@ export const changePricelistName = (pricelistId, newName) => async dispatch => {
 
         const body = JSON.stringify({"name": newName});
 
-        const res = await axios.post(`/api/pricelist/update/${pricelistId}`, body, config);
+        await axios.post(`/api/pricelist/update/${pricelistId}`, body, config);
 
-        dispatch({
-            type: CREATE_PRICELIST,
-            payload: res.data
-        });
+        dispatch(setupAdminUpdatePage());
 
         dispatch(setAlert('Pricelist name changed', 'success'));
     } catch (err) {
@@ -240,12 +208,9 @@ export const deletePricelist = pricelistId => async dispatch => {
                 }
             }
     
-            const res = await axios.post(`/api/pricelist/delete/${pricelistId}`, null, config);
+            await axios.post(`/api/pricelist/delete/${pricelistId}`, null, config);
     
-            dispatch({
-                type: CREATE_PRICELIST,
-                payload: res.data
-            });
+            dispatch(setupAdminUpdatePage());
     
             dispatch(setAlert('Pricelist deleted', 'success'));
         } catch (err) {
