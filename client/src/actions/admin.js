@@ -10,7 +10,8 @@ import {
     UPDATE_NEWPERIODDATA_STATE,
     TOGGLE_NEWPERIODFORM,
     DATA_UPDATEHANDLER,
-    SYNC_NEWNAME
+    SYNC_NEWNAME,
+    UPDATE_PERIOD
 } from './types';
 
 export const getCurrentPricelist = () => async dispatch => {
@@ -118,7 +119,7 @@ export const toggleNewPeriodFormState = (event) => dispatch => {
 
 };
 
-//Toggle newPeriod in the state
+//Update new pricelist name in the state
 export const syncNewNameState = event => dispatch => {
 
     event.preventDefault();
@@ -241,7 +242,7 @@ export const addPeriod = (newPeriod, pricelistId, periodId) => async dispatch =>
         const res = await axios.post(url, body, config);
 
         dispatch({
-            type: CREATE_PRICELIST,
+            type: UPDATE_PERIOD,
             payload: res.data
         });
 

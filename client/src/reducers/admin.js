@@ -1,4 +1,4 @@
-import { GET_PRICELIST, PRICELIST_ERROR, CREATE_PRICELIST, CHANGE_PRICELIST_NAME, SETUP_ADMINUPDATE, UPDATE_PRICELIST_STATE, UPDATE_NEWPERIODDATA_STATE, TOGGLE_NEWPERIODFORM, DATA_UPDATEHANDLER, SYNC_NEWNAME } from "../actions/types"; 
+import { GET_PRICELIST, PRICELIST_ERROR, CREATE_PRICELIST, CHANGE_PRICELIST_NAME, SETUP_ADMINUPDATE, UPDATE_PRICELIST_STATE, UPDATE_NEWPERIODDATA_STATE, TOGGLE_NEWPERIODFORM, DATA_UPDATEHANDLER, SYNC_NEWNAME, UPDATE_PERIOD } from "../actions/types"; 
 
 const initialState = {
     data: null,
@@ -19,6 +19,9 @@ export default function(state = initialState, action) {
 
     switch (type) {
         case GET_PRICELIST:
+        case CREATE_PRICELIST:
+        case CHANGE_PRICELIST_NAME:
+        case DATA_UPDATEHANDLER:
             return {
                 ...state,
                 data: payload,
@@ -45,11 +48,6 @@ export default function(state = initialState, action) {
                 ...state,
                 newPeriod: !state.newPeriod
             }
-        case DATA_UPDATEHANDLER:
-            return {
-                ...state,
-                data: payload
-            }
         case SYNC_NEWNAME:
             return {
                 ...state,
@@ -61,18 +59,13 @@ export default function(state = initialState, action) {
                 error: payload,
                 loading: false
             }
-        case CREATE_PRICELIST:
-            return {
-                ...state,
-                data: payload,
-                loading: false
-            }
-        case CHANGE_PRICELIST_NAME:
-            return {
-                ...state,
-                data: payload,
-                loading: false
-            }
+        case UPDATE_PERIOD:
+                return {
+                    ...state,
+                    data: payload,
+                    loading: false,
+                    newPeriod: false
+                }
         default:
             return state;
     }
