@@ -5,13 +5,7 @@ import AdminPricelistColumn from './AdminPricelistColumn';
 import NewPeriodColumn from './NewPeriodColumn';
 import Spinner from '../Spinner';
 import { connect } from 'react-redux';
-import { 
-    changePricelistName, 
-    deletePricelist, 
-    updatePriceListState,
-    toggleNewPeriodFormState,
-    syncNewNameState
-} from '../../actions/admin';
+import { changePricelistName, deletePricelist, updatePriceListState, toggleNewPeriodFormState, syncNewNameState } from '../../actions/admin';
 
 const AdminUpdate = ({deletePricelist, admin, changePricelistName, updatePriceListState, toggleNewPeriodFormState, syncNewNameState}) => {
 

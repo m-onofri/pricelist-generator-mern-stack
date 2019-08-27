@@ -1,8 +1,9 @@
 import React from 'react';
 import Prices from './Prices';
 import PropTypes from 'prop-types';
+import {connect} from 'react-redux';
 
-const PricesList = ({prices, days, updatePrices}) =>
+const PricesList = ({prices, days}) =>
   <>
     {prices.map(([period, pricesObj], i) => 
       <Prices
@@ -10,14 +11,17 @@ const PricesList = ({prices, days, updatePrices}) =>
         days={days[i][1]}
         id={period}
         value={pricesObj}
-        updatePrices={updatePrices}/>
+      />
     )}
   </>
 
 PricesList.propTypes = {
-  prices: PropTypes.array.isRequired,
-  days: PropTypes.array.isRequired,
-  updatePrices: PropTypes.func.isRequired
+  dashboard: PropTypes.object.isRequired
 }
 
-export default PricesList;
+const mapStateToProps = state => ({
+  prices: state.pricelist.prices,
+  days: state.pricelist.days
+});
+
+export default connect(mapStateToProps)(PricesList);

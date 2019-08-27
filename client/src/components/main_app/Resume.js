@@ -1,21 +1,9 @@
 import React from 'react';
 import uuid from 'uuid';
 import PropTypes from 'prop-types';
+import {renderDate, periodAmount} from '../../utils/dateUtilities';
 
 const Resume = ({days, prices, rooming, total}) => {
-  const renderDate = timestamp => {
-    const date = new Date(timestamp);
-    return `${date.getDate()}-${date.getMonth() + 1}-${date.getFullYear()}`;
-  }
-
-  const dailyAmount = (rooming, price) => {
-    const total = rooming
-                    .map(([category, number]) => number * price[category])
-                    .reduce((a, b) => {
-                      return a + b;
-                    }, 0);
-    return Math.round(total * 100) / 100;
-  }
 
   const renderTable = (days, prices, rooming) => {
     let result = [];
@@ -35,7 +23,7 @@ const Resume = ({days, prices, rooming, total}) => {
                       <td>{renderDate(end)}</td>
                       <td>{daysNumber}</td>
                         {rooming.map(([category, number]) => <td key={uuid.v4()} >{number} x {prices[i][1][category]} €</td>)}
-                      <td>{dailyAmount(rooming, prices[i][1])} € x {daysNumber} day(s)</td>
+                      <td>{periodAmount(rooming, prices[i][1])} € x {daysNumber} day(s)</td>
                     </tr>);
     }
     result.push(<tr key={uuid.v4()} className="resume bg-primary" >

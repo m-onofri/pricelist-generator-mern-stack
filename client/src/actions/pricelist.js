@@ -1,12 +1,18 @@
 import axios from 'axios';
-import { setAlert } from './alert';
+//import { setAlert } from './alert';
+import { manageDays, selectPrices } from '../utils/dateUtilities';
 
 import {
     GET_PRICELIST,
     PRICELIST_ERROR,
-    CREATE_PRICELIST
+    SETUP_DASHBOARD,
+    UPDATE_ARRIVAL,
+    UPDATE_DEPARTURE,
+    UPDATE_PRICELIST_DASHBOARD,
+    UPDATE_ROOMING,
+    UPDATE_PRICES,
+    TOGGLE_TABLE
 } from './types';
-
 
 //Get current users pricelist
 export const getCurrentPricelist = () => async dispatch => {
@@ -25,35 +31,42 @@ export const getCurrentPricelist = () => async dispatch => {
     }
 };
 
-//Create a new pricelist
-export const createPricelist = (newPricelist, history) => async dispatch => {
-
+//Get current users pricelist
+export const setupDashboard= () => async dispatch => {
     try {
-        const config = {
-            headers: {
-                'Content-Type': 'application/json'
-            }
+        const res = await axios.get('/api/pricelist');
+        const data = res.data;
+        const today = new Date();
+        today.setHours(0);
+        today.setMinutes(0);
+        today.setSeconds(0);
+        today.setMilliseconds(0);
+        const todayTimestamp = today.getTime();
+        const tomorrowTimestamp = todayTimestamp + 86400000;
+        const priceLists = Object.keys(data);
+        const priceList = priceLists[0];
+        const selectedDays = manageDays(todayTimestamp, tomorrowTimestamp, data[priceList]);
+        const prices = selectPrices(selectedDays, priceList, data);
+        const updatedState = {
+            loading: false,
+            error: {},
+            table: false,
+            rooming: {ad: 0, ad34: 0, chd3: 0, chd4: 0, inf: 0, animal: 0, culla: 0, sing: 0},
+            data,
+            loaded: true,
+            arrival: todayTimestamp,
+            departure: tomorrowTimestamp,
+            days: selectedDays,
+            priceList,
+            priceLists,
+            prices
         }
-    
-        const body = JSON.stringify({"priceList": newPricelist});
-
-        const res = await axios.post('/api/pricelist/create', body, config);
 
         dispatch({
-            type: CREATE_PRICELIST,
-            payload: res.data
+            type: SETUP_DASHBOARD,
+            payload: updatedState
         });
-
-        dispatch(setAlert('Pricelist created', 'success'));
-
-        history.push('/admin');
     } catch (err) {
-        const errors = err.response.data.errors;
-
-        if (errors) {
-            errors.forEach(error => dispatch(setAlert(error.msg, 'danger')));
-        }
-
         dispatch({
             type: PRICELIST_ERROR,
             payload: { msg: err.response.statusText, status: err.response.status }
@@ -61,130 +74,56 @@ export const createPricelist = (newPricelist, history) => async dispatch => {
     }
 };
 
-//Change the pricelist name
-export const changePricelistName = (pricelistId, newName) => async dispatch => {
+//Get current users pricelist
+export const updateArrivalState = (obj) => dispatch => {
 
-    try {
-        const config = {
-            headers: {
-                'Content-Type': 'application/json'
-            }
-        }
-
-        const body = JSON.stringify({"name": newName});
-
-        const res = await axios.post(`/api/pricelist/update/${pricelistId}`, body, config);
-
-        dispatch({
-            type: CREATE_PRICELIST,
-            payload: res.data
-        });
-
-        dispatch(setAlert('Pricelist name changed', 'success'));
-    } catch (err) {
-        const errors = err.response.data.errors;
-
-        if (errors) {
-            errors.forEach(error => dispatch(setAlert(error.msg, 'danger')));
-        }
-
-        dispatch({
-            type: PRICELIST_ERROR,
-            payload: { msg: err.response.statusText, status: err.response.status }
-        });
-    }
+    dispatch({
+        type: UPDATE_ARRIVAL,
+        payload: obj
+    });
 };
 
-//Delete a pricelist
-export const deletePricelist = pricelistId => async dispatch => {
-    
-        try {
-            const config = {
-                headers: {
-                    'Content-Type': 'application/json'
-                }
-            }
-    
-            const res = await axios.post(`/api/pricelist/delete/${pricelistId}`, null, config);
-    
-            dispatch({
-                type: CREATE_PRICELIST,
-                payload: res.data
-            });
-    
-            dispatch(setAlert('Pricelist deleted', 'success'));
-        } catch (err) {
-            dispatch({
-                type: PRICELIST_ERROR,
-                payload: { msg: err.response.statusText, status: err.response.status }
-            });
-        }
+//Get current users pricelist
+export const updateDepartureState = (obj) => dispatch => {
+
+    dispatch({
+        type: UPDATE_DEPARTURE,
+        payload: obj
+    });
 };
 
-//Add or update a period to an existing pricelist
-export const addPeriod = (newPeriod, pricelistId, periodId) => async dispatch => {
-    try {
-        const config = {
-            headers: {
-                'Content-Type': 'application/json'
-            }
-        }
+//Get current users pricelist
+export const updatePriceListState = (obj) => dispatch => {
 
-        let url = `api/pricelist/${pricelistId}/period`;
+    dispatch({
+        type: UPDATE_PRICELIST_DASHBOARD,
+        payload: obj
+    });
+};
 
-        if (periodId) {
-            newPeriod.periodId = periodId;
-        }
-    
-        const body = JSON.stringify(newPeriod);
+//Get current users pricelist
+export const updateRoomingState = rooming => dispatch => {
 
-        const res = await axios.post(url, body, config);
+    dispatch({
+        type: UPDATE_ROOMING,
+        payload: rooming
+    });
+};
 
-        dispatch({
-            type: CREATE_PRICELIST,
-            payload: res.data
-        });
+//Get current users pricelist
+export const updatePricesState = prices => dispatch => {
 
-        dispatch(setAlert(periodId ? 'Period updated' : 'New Period added', 'success'));
-        
-    } catch (err) {
-        const errors = err.response.data.errors;
+    dispatch({
+        type: UPDATE_PRICES,
+        payload: prices
+    });
+};
 
-        if (errors) {
-            errors.forEach(error => dispatch(setAlert(error.msg, 'danger')));
-        }
+//Get current users pricelist
+export const toggleTableState = table => dispatch => {
 
-        dispatch({
-            type: PRICELIST_ERROR,
-            payload: { msg: err.response.statusText, status: err.response.status }
-        });
-    }
-}
-
-//Delete a period from a pricelist
-export const deletePeriod = (periodId, pricelistId) => async dispatch => {
-    try {
-        const config = {
-            headers: {
-                'Content-Type': 'application/json'
-            }
-        }
-
-        const url = `api/pricelist/${pricelistId}/period/delete/${periodId}`;
-
-        const res = await axios.post(url, null, config);
-
-        dispatch({
-            type: CREATE_PRICELIST,
-            payload: res.data
-        });
-
-        dispatch(getCurrentPricelist());
-        dispatch(setAlert('Period deleted', 'success'));
-    } catch (err) {
-        dispatch({
-            type: PRICELIST_ERROR,
-            payload: { msg: err.response.statusText, status: err.response.status }
-        });
-    }
-}
+    dispatch({
+        type: TOGGLE_TABLE,
+        payload: table
+    });
+};

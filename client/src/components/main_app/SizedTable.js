@@ -22,7 +22,7 @@ function SizedTable({days, prices, rooming, total}) {
         display: tableData.maxFields > (4 + roomingArr.length)
       }); 
     }
-  }, [roomingArr.length]);
+  }, [roomingArr.length, tableData]);
 
   const onSize = size => {
     const overMargin = window.innerWidth < 1100 ? 80 : 265;

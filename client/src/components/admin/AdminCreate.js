@@ -1,7 +1,7 @@
 import React, {useState} from 'react';
 import {connect} from 'react-redux';
 import { withRouter } from 'react-router-dom';
-import {createPricelist, getCurrentPricelist} from '../../actions/pricelist';
+import {createPricelist} from '../../actions/admin';
 import {register} from '../../actions/auth';
 import Periods from './Periods';
 import Spinner from '../Spinner';
@@ -102,7 +102,7 @@ const AdminCreate = ({createPricelist, history}) => {
                         </div>
                         <a 
                             href="!#"
-                            style={{"margin-top": '1.2rem'}}
+                            style={{"marginTop": '1.2rem'}}
                             className="btn btn-primary btn-long"
                             onClick={buttonClickHandler}
                             >Setup New Pricelist</a>
@@ -152,7 +152,7 @@ const AdminCreate = ({createPricelist, history}) => {
                             );
                         })}
                     </div>
-                    <a href="!#" class="btn btn-primary my-2" onClick={(e) => submitHandler(e)}>Create Pricelist</a> 
+                    <a href="!#" className="btn btn-primary my-2" onClick={(e) => submitHandler(e)}>Create Pricelist</a> 
                 </div>
             </section>
         );  
@@ -161,13 +161,13 @@ const AdminCreate = ({createPricelist, history}) => {
     }
 }
 
+//TODO: wtf is message????
 const mapStateToProps = state => ({
     message: state.pricelist.message
 });
 
 AdminCreate.propTypes = {
-    message: PropTypes.object.isRequired,
     createPricelist: PropTypes.func.isRequired
 }
 
-export default connect(mapStateToProps, {createPricelist, getCurrentPricelist, register})(withRouter(AdminCreate));
+export default connect(mapStateToProps, {createPricelist, register})(withRouter(AdminCreate));

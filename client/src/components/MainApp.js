@@ -1,20 +1,20 @@
 import React, { useEffect} from 'react';
 import { connect } from 'react-redux';
-import { getCurrentPricelist } from '../actions/pricelist';
+import { setupDashboard } from '../actions/pricelist';
 import { setupAdminUpdatePage } from '../actions/admin';
 import Dashboard from './Dashboard';
 import PropTypes from 'prop-types';
 
-const MainApp = ({ pricelist: {loading, pricelist}, getCurrentPricelist, setupAdminUpdatePage }) => {
+const MainApp = ({ pricelist: {loading}, setupDashboard, setupAdminUpdatePage }) => {
     useEffect(() => {
-        getCurrentPricelist();
+        setupDashboard();
         setupAdminUpdatePage();
-    }, [getCurrentPricelist, setupAdminUpdatePage]);
+    }, [setupDashboard, setupAdminUpdatePage]);
 
     if (!loading) { 
         return (
             <div>   
-                <Dashboard data={pricelist} />       
+                <Dashboard />       
             </div>
         )
     } else {
@@ -24,11 +24,11 @@ const MainApp = ({ pricelist: {loading, pricelist}, getCurrentPricelist, setupAd
 
 MainApp.propTypes = {
     pricelist: PropTypes.object.isRequired,
-    getCurrentPricelist: PropTypes.func.isRequired
+    setupDashboard: PropTypes.func.isRequired
 }
  
 const mapStateToProps = state => ({
     pricelist: state.pricelist
 });
 
-export default connect(mapStateToProps, { getCurrentPricelist, setupAdminUpdatePage })(MainApp);
+export default connect(mapStateToProps, { setupDashboard, setupAdminUpdatePage })(MainApp);

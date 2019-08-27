@@ -1,12 +1,9 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import {
-    updateNewPeriodDataState,
-    addPeriod,
-    toggleNewPeriodFormState
-} from '../../actions/admin';
+import { updateNewPeriodDataState, addPeriod, toggleNewPeriodFormState } from '../../actions/admin';
+import PropTypes from 'prop-types';
 
-const NewPeriodColumn = ({admin: {newPeriodData, priceListId}, updateNewPeriodDataState,addPeriod,toggleNewPeriodFormState}) => {
+const NewPeriodColumn = ({newPeriodData, priceListId, updateNewPeriodDataState, addPeriod,toggleNewPeriodFormState}) => {
 
     const {periodName, start, end, ad, ad34, chd3, chd4, inf, culla, animal, sing} = newPeriodData;
             return(
@@ -62,11 +59,16 @@ const NewPeriodColumn = ({admin: {newPeriodData, priceListId}, updateNewPeriodDa
 }
 
 const mapStateToProps = state => ({
-    admin: state.admin
+    newPeriodData: state.admin.newPeriodData,
+    priceListId: state.admin.priceListId
 })
 
-export default connect(mapStateToProps, {
-    updateNewPeriodDataState,
-    addPeriod,
-    toggleNewPeriodFormState
-})(NewPeriodColumn);
+NewPeriodColumn.propTypes = {
+    newPeriodData: PropTypes.object.isRequired,
+    priceListId: PropTypes.string.isRequired, 
+    updateNewPeriodDataState: PropTypes.func.isRequired, 
+    addPeriod: PropTypes.func.isRequired,
+    toggleNewPeriodFormState: PropTypes.func.isRequired
+}
+
+export default connect(mapStateToProps, { updateNewPeriodDataState, addPeriod, toggleNewPeriodFormState })(NewPeriodColumn);

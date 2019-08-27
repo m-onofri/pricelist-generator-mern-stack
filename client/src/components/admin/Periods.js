@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 
 const Periods = ({index, data, addNewValuesHandler}) => {
     return (
-        <div class="column price-column" id={`period-${index}`}>
+        <div className="column price-column" id={`period-${index}`}>
             <div className="input-block">
                 <input type="text"  name="periodName" value={data.periodName} onChange={addNewValuesHandler}/>
             </div>
@@ -42,7 +42,7 @@ const Periods = ({index, data, addNewValuesHandler}) => {
 }
 
 Periods.propTypes = {
-    index: PropTypes.number.isRequired,
+    index: PropTypes.string.isRequired,
     data: PropTypes.object.isRequired,
     addNewValuesHandler: PropTypes.func.isRequired
 }

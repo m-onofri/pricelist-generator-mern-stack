@@ -1,5 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import {renderDate, periodAmount} from '../../utils/dateUtilities';
 import uuid from 'uuid';
 
 const AlternativeTable = ({rooming, days, prices, total}) => {
@@ -7,20 +8,6 @@ const AlternativeTable = ({rooming, days, prices, total}) => {
   //Remove the rooming items equal to zero
   //Return => [["ad", 2], ...]
 const roomingArr = Object.entries(rooming).filter(([, number]) => number !== 0);
-
-const renderDate = timestamp => {
-    const date = new Date(timestamp);
-    return `${date.getDate()}-${date.getMonth() + 1}-${date.getFullYear()}`;
-  }
-
-  const dailyAmount = (rooming, price) => {
-    const total = rooming
-                    .map(([category, number]) => number * price[category])
-                    .reduce((a, b) => {
-                      return a + b;
-                    }, 0);
-    return Math.round(total * 100) / 100;
-  }
 
   const renderTable = (days, prices, rooming) => {
     let result = [];
@@ -48,7 +35,7 @@ const renderDate = timestamp => {
                             <h3>{renderDate(end)}</h3>
                             <h3>{daysNumber}</h3>
                             {rooming.map(([category, number]) => <h3 key={uuid.v4()} >{number} x {prices[i][1][category]} €</h3>)}
-                            <h3>{dailyAmount(rooming, prices[i][1])} € x {daysNumber} day(s)</h3>
+                            <h3>{periodAmount(rooming, prices[i][1])} € x {daysNumber} day(s)</h3>
                         </div>
                     </div>);
     }

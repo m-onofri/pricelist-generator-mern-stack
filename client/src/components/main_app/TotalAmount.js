@@ -1,13 +1,19 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import {totalAmount} from '../../utils/dateUtilities';
+import { connect } from 'react-redux';
 
-const TotalAmount = ({total}) => (
+const TotalAmount = ({dashboard}) => (
     <div className="dashboard-total_amount bg-primary my-1">
         <h3>Total Amount</h3>
-        <h4>{total} €</h4>
+        <h4>{totalAmount(dashboard)} €</h4>
     </div>
 );
 
-TotalAmount.propTypes = {total: PropTypes.number.isRequired}
+const mapStateToProps = state => ({
+    dashboard: state.pricelist
+})
 
-export default TotalAmount;
+TotalAmount.propTypes = {dashboard: PropTypes.object.isRequired}
+
+export default connect(mapStateToProps)(TotalAmount);

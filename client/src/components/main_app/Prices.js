@@ -1,15 +1,26 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import {updatePricesState} from '../../actions/pricelist';
+import {renderDate} from '../../utils/dateUtilities';
+import {connect} from 'react-redux';
 
-const Prices = ({days, id, value, updatePrices}) => {
+const Prices = ({days, id, value, updatePricesState, dashboard}) => {
 
   const daysNumber = days.length;
   const lastDay = days[daysNumber - 1] + 86400000;
   const firstDay = days[0];
 
-  const renderDate = timestamp => {
-    const date = new Date(timestamp);
-    return `${date.getDate()}-${date.getMonth() + 1}-${date.getFullYear()}`;
+  const updatePrices = event => {
+    const prices = [...dashboard.prices];
+    const section = event.target.parentNode.parentNode.id;
+    const id = event.target.id;
+    const value = event.target.value;
+    for(let i=0; i < prices.length; i++) {
+      if(prices[i][0] === section) {
+        prices[i][1][id] = value;
+      }
+    }
+    updatePricesState(prices);
   }
 
   return(
@@ -85,4 +96,8 @@ Prices.propTypes = {
   updatePrices: PropTypes.func.isRequired
 }
 
-export default Prices;
+const mapStateToProps = state => ({
+  dashboard: state.pricelist
+});
+
+export default connect(mapStateToProps, {updatePricesState})(Prices);
