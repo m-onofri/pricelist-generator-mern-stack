@@ -151,6 +151,8 @@ export const createPricelist = (newPricelist, history) => async dispatch => {
             payload: res.data
         });
 
+        dispatch(setupAdminUpdatePage());
+
         dispatch(setAlert('Pricelist created', 'success'));
 
         history.push('/admin');

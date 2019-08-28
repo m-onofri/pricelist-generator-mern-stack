@@ -3,6 +3,7 @@ import {connect} from 'react-redux';
 import { withRouter } from 'react-router-dom';
 import {createPricelist} from '../../actions/admin';
 import {register} from '../../actions/auth';
+import {twoIntString} from '../../utils/dateUtilities';
 import Periods from './Periods';
 import Spinner from '../Spinner';
 import PropTypes from 'prop-types';
@@ -16,23 +17,6 @@ const AdminCreate = ({createPricelist, history}) => {
         message: "",
         loaded: true
     })
-
-    const priceListNameHandler = e => {
-        const name = e.target.value.toUpperCase();
-        setCreateData({...createData, name});
-    }
-
-    const priceListPeriodsHandler = e => {
-        const periods = parseInt(e.target.value);
-        setCreateData({...createData, periods});
-    }
-
-    //value: integer
-    const twoIntString = value => {
-        let stringValue = value.toString();
-        if (stringValue.length < 2) stringValue = `0${stringValue}`;
-        return stringValue;
-    }
 
     const buttonClickHandler = event => {
         event.preventDefault();
@@ -72,11 +56,6 @@ const AdminCreate = ({createPricelist, history}) => {
         setCreateData({...createData, priceList});
     }
 
-    const submitHandler = event => {
-        event.preventDefault();
-        createPricelist(createData.priceList, history);
-    }
-
     const {loaded, name, periods} = createData;
     if (loaded) {
         return(
@@ -90,7 +69,12 @@ const AdminCreate = ({createPricelist, history}) => {
                                 type="text" 
                                 className="styled-input"
                                 value={name} 
-                                onChange={(e) => priceListNameHandler(e)}/>
+                                onChange={(e) => {
+                                    setCreateData({
+                                        ...createData, 
+                                        name: e.target.value.toUpperCase()
+                                    });
+                                }}/>
                         </div>
                         <div className="period-number">
                             <label>Number</label><br/>
@@ -98,7 +82,12 @@ const AdminCreate = ({createPricelist, history}) => {
                                 type="number"
                                 className="styled-input"
                                 value={periods} 
-                                onChange={(e) => priceListPeriodsHandler(e)}/>
+                                onChange={(e) => {
+                                    setCreateData({
+                                        ...createData, 
+                                        periods: parseInt(e.target.value)
+                                    });
+                                }}/>
                         </div>
                         <a 
                             href="!#"
@@ -152,7 +141,14 @@ const AdminCreate = ({createPricelist, history}) => {
                             );
                         })}
                     </div>
-                    <a href="!#" className="btn btn-primary my-2" onClick={(e) => submitHandler(e)}>Create Pricelist</a> 
+                    <a 
+                        href="!#" 
+                        className="btn btn-primary my-2" 
+                        onClick={(e) => {
+                            e.preventDefault();
+                            createPricelist(createData.priceList, history);
+                        }}
+                    >Create Pricelist</a> 
                 </div>
             </section>
         );  
@@ -161,13 +157,8 @@ const AdminCreate = ({createPricelist, history}) => {
     }
 }
 
-//TODO: wtf is message????
-const mapStateToProps = state => ({
-    message: state.pricelist.message
-});
-
 AdminCreate.propTypes = {
     createPricelist: PropTypes.func.isRequired
 }
 
-export default connect(mapStateToProps, {createPricelist, register})(withRouter(AdminCreate));
+export default connect(null, {createPricelist, register})(withRouter(AdminCreate));
