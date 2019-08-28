@@ -3,13 +3,13 @@ import PropTypes from 'prop-types';
 import SelectListini from '../SelectListini';
 import AdminPricelistColumn from './AdminPricelistColumn';
 import NewPeriodColumn from './NewPeriodColumn';
+import RoomingLabelColumn from './RoomingLabelColumn';
 import Spinner from '../Spinner';
 import { connect } from 'react-redux';
 import { changePricelistName, deletePricelist, updatePriceListState, toggleNewPeriodFormState, syncNewNameState } from '../../actions/admin';
 
 const AdminUpdate = ({deletePricelist, admin, changePricelistName, updatePriceListState, toggleNewPeriodFormState, syncNewNameState}) => {
 
-    const fields = ["Period", "From", "To", "Adulti", "Ad 3-4", "Chd 3", "Chd 4", "Infant", "Culla", "Animal", "Sup. sing"];
     const {loaded, priceLists, priceList, newPricelistName} = admin;
     if (loaded) {
         return(
@@ -53,9 +53,7 @@ const AdminUpdate = ({deletePricelist, admin, changePricelistName, updatePriceLi
                             className="btn btn-primary btn-long">Change Pricelist Name</a>
                     </div>
                     <div className="admin-update-prices_columns my-1">
-                        <div className="column rooming-column">
-                            {fields.map(field => <div class="input-block"><label>{field}</label></div>)}
-                        </div>
+                        <RoomingLabelColumn />
                         <AdminPricelistColumn />
                         {admin.newPeriod && <NewPeriodColumn />}
                     </div>

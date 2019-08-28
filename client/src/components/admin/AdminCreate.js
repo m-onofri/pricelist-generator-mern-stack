@@ -7,6 +7,7 @@ import {twoIntString} from '../../utils/dateUtilities';
 import Periods from './Periods';
 import Spinner from '../Spinner';
 import PropTypes from 'prop-types';
+import RoomingLabelColumn from './RoomingLabelColumn';
 
 const AdminCreate = ({createPricelist, history}) => {
     const [createData, setCreateData] = useState({
@@ -97,41 +98,7 @@ const AdminCreate = ({createPricelist, history}) => {
                             >Setup New Pricelist</a>
                     </div>
                     <div className="admin-create-prices_columns my-1">
-                        <div className="column rooming-column">
-                            <div className="input-block">
-                                <label>Period</label>
-                            </div>
-                            <div className="input-block">
-                                <label>From</label>
-                            </div>
-                            <div className="input-block">
-                                <label>To</label>
-                            </div>
-                            <div className="input-block">
-                                <label>Adulti</label>
-                            </div>
-                            <div className="input-block">
-                                <label>Ad 3-4</label>
-                            </div>
-                            <div className="input-block">
-                                <label>Chd 3</label>
-                            </div>
-                            <div className="input-block">
-                                <label>Chd 4</label>
-                            </div>
-                            <div className="input-block">
-                                <label>Infant</label>
-                            </div>
-                            <div className="input-block">
-                                <label>Culla</label>
-                            </div>
-                            <div className="input-block">
-                                <label>Animal</label>
-                            </div>
-                            <div className="input-block">
-                                <label>Sup. sing</label>
-                            </div>
-                        </div>
+                        <RoomingLabelColumn />
                         {createData.priceList.map((item, index) => {
                             return(<Periods
                                     key={index} 
