@@ -5,7 +5,7 @@ const RoomingLabelColumn = () => {
 
     return (
         <div className="column rooming-column">
-            {fields.map(field => <div class="input-block"><label>{field}</label></div>)}
+            {fields.map((field, i) => <div key={i} className="input-block"><label>{field}</label></div>)}
         </div>
     )
 

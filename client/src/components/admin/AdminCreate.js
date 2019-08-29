@@ -100,11 +100,11 @@ const AdminCreate = ({createPricelist, history}) => {
                     <div className="admin-create-prices_columns my-1">
                         <RoomingLabelColumn />
                         {createData.priceList.map((item, index) => {
-                            return(<Periods
-                                    key={index} 
-                                    index={item[0]}
-                                    data={item[1]}
-                                    addNewValuesHandler={addNewValuesHandler}/>
+                            return( <Periods
+                                        key={index} 
+                                        index={item[0]}
+                                        data={item[1]}
+                                        addNewValuesHandler={addNewValuesHandler}/>
                             );
                         })}
                     </div>

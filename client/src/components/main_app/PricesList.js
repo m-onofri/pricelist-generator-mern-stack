@@ -16,7 +16,8 @@ const PricesList = ({prices, days}) =>
   </>
 
 PricesList.propTypes = {
-  dashboard: PropTypes.object.isRequired
+  prices: PropTypes.array.isRequired,
+  days: PropTypes.array.isRequired
 }
 
 const mapStateToProps = state => ({

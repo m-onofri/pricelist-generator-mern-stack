@@ -93,7 +93,7 @@ Prices.propTypes = {
   days: PropTypes.array.isRequired,
   id: PropTypes.string.isRequired,
   value: PropTypes.object.isRequired,
-  updatePrices: PropTypes.func.isRequired
+  updatePricesState: PropTypes.func.isRequired
 }
 
 const mapStateToProps = state => ({

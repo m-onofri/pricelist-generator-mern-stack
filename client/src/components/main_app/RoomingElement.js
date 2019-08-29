@@ -26,15 +26,11 @@ const RoomingElement = ({title, id, dashboard, updateRoomingState}) => {
   );
 }
 
-
-
-  
-
 RoomingElement.propTypes = {
   title: PropTypes.string.isRequired,
   id: PropTypes.string.isRequired,
-  value: PropTypes.number.isRequired,
-  updateRooming: PropTypes.func.isRequired 
+  dashboard: PropTypes.object.isRequired,
+  updateRoomingState: PropTypes.func.isRequired 
 }
 
 const mapStateToProps = state => ({

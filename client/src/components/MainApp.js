@@ -24,7 +24,8 @@ const MainApp = ({ pricelist: {loading}, setupDashboard, setupAdminUpdatePage })
 
 MainApp.propTypes = {
     pricelist: PropTypes.object.isRequired,
-    setupDashboard: PropTypes.func.isRequired
+    setupDashboard: PropTypes.func.isRequired,
+    setupAdminUpdatePage: PropTypes.func.isRequired
 }
  
 const mapStateToProps = state => ({

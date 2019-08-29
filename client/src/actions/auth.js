@@ -96,6 +96,9 @@ export const login = ({ email, password }) => async dispatch => {
 };
 
 //Logout
-export const logout = () => dispatch => {
+export const logout = (e) => dispatch => {
+
+    e.preventDefault();
+
     dispatch({ type: LOGOUT });
 };

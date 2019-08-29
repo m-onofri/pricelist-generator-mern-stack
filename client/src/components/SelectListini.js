@@ -18,7 +18,9 @@ const SelectListini = ({updatePriceList, value, priceLists, label, data}) =>
 SelectListini.propTypes = {
   value: PropTypes.string.isRequired,
   updatePriceList: PropTypes.func.isRequired,
-  priceLists: PropTypes.array.isRequired
+  priceLists: PropTypes.array.isRequired,
+  label: PropTypes.bool.isRequired, 
+  data: PropTypes.object
 }
 
 export default SelectListini;

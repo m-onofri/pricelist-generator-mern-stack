@@ -67,7 +67,9 @@ const Dashboard = ({dashboard, updatePriceListState, toggleTableState}) => {
 }
 
 Dashboard.propTypes = {
-  dashboard: PropTypes.object.isRequired  
+  dashboard: PropTypes.object.isRequired,
+  updatePriceListState: PropTypes.func.isRequired, 
+  toggleTableState: PropTypes.func.isRequired
 }
 
 const mapStateToProps = state => ({
