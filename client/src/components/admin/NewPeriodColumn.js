@@ -1,61 +1,55 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import { updateNewPeriodDataState, addPeriod, toggleNewPeriodFormState } from '../../actions/admin';
+import InputBlockNewPeriod from './InputBlockNewPeriod';
+import { addPeriod, toggleNewPeriodFormState } from '../../actions/admin';
 import PropTypes from 'prop-types';
 
-const NewPeriodColumn = ({newPeriodData, priceListId, updateNewPeriodDataState, addPeriod,toggleNewPeriodFormState}) => {
+const NewPeriodColumn = ({newPeriodData, priceListId, addPeriod,toggleNewPeriodFormState}) => {
 
-    const {periodName, start, end, ad, ad34, chd3, chd4, inf, culla, animal, sing} = newPeriodData;
-            return(
-                <div className="column price-column">
-                    <div className="input-block">
-                        <input type="text" name="periodName" value={periodName} required onChange={updateNewPeriodDataState}/>
-                    </div>
-                    <div className="input-block">
-                        <input style={{"padding": "0.215rem 0"}} type="date" name="start" value={start} required onChange={updateNewPeriodDataState}/>
-                    </div>
-                    <div className="input-block">
-                        <input type="date" style={{"padding": "0.215rem 0"}} name="end" value={end} required onChange={updateNewPeriodDataState}/>
-                    </div>
-                    <div className="input-block">
-                        <input type="number" name="ad" step="0.01" value={ad} required min="0" onChange={updateNewPeriodDataState}/>
-                    </div>
-                    <div className="input-block">
-                        <input type="number" name="ad34" step="0.01" value={ad34} required min="0" onChange={updateNewPeriodDataState}/>
-                    </div>
-                    <div className="input-block">
-                        <input type="number" name="chd3" step="0.01" value={chd3} required min="0" onChange={updateNewPeriodDataState}/>
-                    </div>
-                    <div className="input-block">
-                        <input type="number" name="chd4" step="0.01" value={chd4} required min="0" onChange={updateNewPeriodDataState}/>
-                    </div>
-                    <div className="input-block">
-                        <input type="number" name="inf" step="0.01" value={inf} required min="0"onChange={updateNewPeriodDataState}/>
-                    </div>
-                    <div className="input-block">
-                        <input type="number" name="culla" step="0.01" value={culla} required min="0" onChange={updateNewPeriodDataState}/>
-                    </div>
-                    <div className="input-block">
-                        <input type="number" name="animal" step="0.01" value={animal} required min="0" onChange={updateNewPeriodDataState}/>
-                    </div>
-                    <div className="input-block">
-                        <input type="number" name="sing" step="0.01" value={sing} required min="0" onChange={updateNewPeriodDataState}/>
-                    </div>
-                    <div className="input-block">
-                        <a 
-                            href="!#" 
-                            className="btn btn-success" 
-                            onClick={(e) => {
-                                e.preventDefault();
-                                addPeriod(newPeriodData, priceListId, undefined);
-                            }}>
-                        Add</a>
-                    </div>
-                    <div className="input-block">
-                        <a href="!#" className="btn btn-danger" onClick={toggleNewPeriodFormState}>Back</a>
-                    </div>
+    const fields = [
+        {name:"periodName", type:"text"}, 
+        {name: "start", type: "date"}, 
+        {name: "end", type: "date"}, 
+        {name: "ad", type: "number"}, 
+        {name: "ad34", type: "number"}, 
+        {name: "chd3", type: "number"},
+        {name: "chd4", type: "number"}, 
+        {name: "inf", type: "number"},
+        {name: "culla", type: "number"}, 
+        {name: "animal", type: "number"}, 
+        {name: "sing", type: "number"}];
+
+        return(
+            <div className="column price-column">
+                {fields.map((f, i) => {
+                    return(
+                        <InputBlockNewPeriod
+                            key={i}
+                            type={f.type}
+                            name={f.name}
+                            value={newPeriodData[f.name]}
+                        />
+                    )}
+                )}
+                <div className="input-block">
+                    <a 
+                        href="!#" 
+                        className="btn btn-success" 
+                        onClick={(e) => {
+                            e.preventDefault();
+                            addPeriod(newPeriodData, priceListId, undefined);
+                        }}>
+                    Add</a>
                 </div>
-            );
+                <div className="input-block">
+                    <a 
+                        href="!#" 
+                        className="btn btn-danger" 
+                        onClick={toggleNewPeriodFormState}>
+                    Back</a>
+                </div>
+            </div>
+        );
 }
 
 const mapStateToProps = state => ({
@@ -71,4 +65,4 @@ NewPeriodColumn.propTypes = {
     toggleNewPeriodFormState: PropTypes.func.isRequired
 }
 
-export default connect(mapStateToProps, { updateNewPeriodDataState, addPeriod, toggleNewPeriodFormState })(NewPeriodColumn);
+export default connect(mapStateToProps, { addPeriod, toggleNewPeriodFormState })(NewPeriodColumn);

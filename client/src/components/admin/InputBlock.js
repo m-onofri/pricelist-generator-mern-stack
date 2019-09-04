@@ -4,7 +4,6 @@ import { valueUpdateHandlerState } from '../../actions/admin';
 
 const InputBlock = ({admin, type, name, i, value, valueUpdateHandlerState}) => {
     const isPrices = type === "number";
-    console.log(admin.periods[i]);
     return(
         <div className="input-block">
             <input 

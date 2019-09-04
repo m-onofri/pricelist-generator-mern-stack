@@ -19,6 +19,16 @@ const AdminCreate = ({createPricelist, history}) => {
         loaded: true
     })
 
+    const fields = [
+        {name: "ad", type: "number"}, 
+        {name: "ad34", type: "number"}, 
+        {name: "chd3", type: "number"},
+        {name: "chd4", type: "number"}, 
+        {name: "inf", type: "number"},
+        {name: "culla", type: "number"}, 
+        {name: "animal", type: "number"}, 
+        {name: "sing", type: "number"}];
+
     const buttonClickHandler = event => {
         event.preventDefault();
         const priceList = [];
@@ -27,19 +37,14 @@ const AdminCreate = ({createPricelist, history}) => {
         const todayString = `${todayDate.getFullYear()}-${twoIntString(todayDate.getMonth() + 1)}-${twoIntString(todayDate.getDate())}`;
         for (let j = 0; j < periods; j++) {
             const periodName = String.fromCharCode(97 + j);
-            priceList.push([periodName, {
+            const startingObj = {
                 name: name,
                 periodName: periodName,
                 start: todayString,
-                end: todayString,
-                ad: "0",
-                ad34: "0",
-                chd3: "0",
-                chd4: "0",
-                inf: "0",
-                animal: "5",
-                culla: "10",
-                sing: "14"}]);
+                end: todayString
+            }
+            fields.forEach(field => startingObj[field.name] = '0');
+            priceList.push([periodName, startingObj]);
         }
         setCreateData({...createData, priceList});
     }

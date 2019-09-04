@@ -14,7 +14,7 @@ const PricesList = ({prices, days}) =>
       />
     )}
   </>
-
+ 
 PricesList.propTypes = {
   prices: PropTypes.array.isRequired,
   days: PropTypes.array.isRequired
