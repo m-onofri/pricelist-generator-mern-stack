@@ -1,6 +1,5 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import {updatePricesState} from '../../actions/pricelist';
 import {renderDate} from '../../utils/dateUtilities';
 import {connect} from 'react-redux';
 import InputBlockPrices from './InputBlockPrices';
@@ -40,12 +39,11 @@ const Prices = ({days, id, value}) => {
 Prices.propTypes = {
   days: PropTypes.array.isRequired,
   id: PropTypes.string.isRequired,
-  value: PropTypes.object.isRequired,
-  updatePricesState: PropTypes.func.isRequired
+  value: PropTypes.object.isRequired
 }
 
 const mapStateToProps = state => ({
   dashboard: state.pricelist
 });
 
-export default connect(mapStateToProps, {updatePricesState})(Prices);
+export default connect(mapStateToProps)(Prices);

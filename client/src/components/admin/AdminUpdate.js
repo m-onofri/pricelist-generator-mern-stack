@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useEffect} from 'react';
 import PropTypes from 'prop-types';
 import SelectListini from '../SelectListini';
 import AdminPricelistColumn from './AdminPricelistColumn';
@@ -6,9 +6,13 @@ import NewPeriodColumn from './NewPeriodColumn';
 import RoomingLabelColumn from './RoomingLabelColumn';
 import Spinner from '../Spinner';
 import { connect } from 'react-redux';
-import { changePricelistName, deletePricelist, updatePriceListState, toggleNewPeriodFormState, syncNewNameState } from '../../actions/admin';
+import { changePricelistName, deletePricelist, updatePriceListState, toggleNewPeriodFormState, syncNewNameState, setupAdminUpdatePage } from '../../actions/admin';
 
-const AdminUpdate = ({deletePricelist, admin, changePricelistName, updatePriceListState, toggleNewPeriodFormState, syncNewNameState}) => {
+const AdminUpdate = ({deletePricelist, admin, changePricelistName, updatePriceListState, toggleNewPeriodFormState, syncNewNameState, setupAdminUpdatePage}) => {
+
+    useEffect(() => {
+        setupAdminUpdatePage();
+    }, [setupAdminUpdatePage]);
 
     const {loaded, priceLists, priceList, newPricelistName} = admin;
     if (loaded) {
@@ -71,11 +75,12 @@ AdminUpdate.propTypes = {
     deletePricelist: PropTypes.func.isRequired, 
     updatePriceListState: PropTypes.func.isRequired,
     toggleNewPeriodFormState: PropTypes.func.isRequired,
-    syncNewNameState: PropTypes.func.isRequired
+    syncNewNameState: PropTypes.func.isRequired,
+    setupAdminUpdatePage: PropTypes.func.isRequired
 }
 
 const mapStateToProps = state => ({
     admin: state.admin
  });
 
-export default connect(mapStateToProps, { changePricelistName, deletePricelist, updatePriceListState,toggleNewPeriodFormState, syncNewNameState })(AdminUpdate);
+export default connect(mapStateToProps, { changePricelistName, deletePricelist, updatePriceListState,toggleNewPeriodFormState, syncNewNameState, setupAdminUpdatePage })(AdminUpdate);

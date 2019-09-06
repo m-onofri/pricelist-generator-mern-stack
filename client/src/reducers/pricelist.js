@@ -1,4 +1,4 @@
-import { GET_PRICELIST, PRICELIST_ERROR, CREATE_PRICELIST, CHANGE_PRICELIST_NAME, SETUP_DASHBOARD, UPDATE_ARRIVAL, UPDATE_DEPARTURE, UPDATE_PRICELIST_DASHBOARD, UPDATE_ROOMING, UPDATE_PRICES, TOGGLE_TABLE } from "../actions/types"; 
+import { GET_PRICELIST, PRICELIST_ERROR, CREATE_PRICELIST, SETUP_DASHBOARD, UPDATE_ARRIVAL, UPDATE_DEPARTURE, UPDATE_PRICELIST_DASHBOARD, UPDATE_ROOMING, UPDATE_PRICES, TOGGLE_TABLE } from "../actions/types"; 
 
 const initialState = {
     data: null,
@@ -58,12 +58,6 @@ export default function(state = initialState, action) {
                 table: payload
             }
         case CREATE_PRICELIST:
-            return {
-                ...state,
-                data: payload,
-                loading: false
-            }
-        case CHANGE_PRICELIST_NAME:
             return {
                 ...state,
                 data: payload,

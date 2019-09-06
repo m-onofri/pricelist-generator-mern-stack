@@ -1,6 +1,7 @@
 import React from 'react';
 import {connect} from 'react-redux';
 import {updatePricesState} from '../../actions/pricelist';
+import PropTypes from 'prop-types';
 
 const InputBlockPrices = ({dashboard, updatePricesState, value, field}) => {
 
@@ -27,6 +28,12 @@ const InputBlockPrices = ({dashboard, updatePricesState, value, field}) => {
             />
       </div>
     );
+}
+
+InputBlockPrices.propTypes = {
+  dashboard: PropTypes.object.isRequired,
+  updatePricesState: PropTypes.func.isRequired,
+  field: PropTypes.string.isRequired
 }
 
 const mapStateToProps = state => ({

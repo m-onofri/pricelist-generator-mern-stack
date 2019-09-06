@@ -1,8 +1,9 @@
 import React from 'react';
 import {connect} from 'react-redux';
 import { updateNewPeriodDataState } from '../../actions/admin';
+import PropTypes from 'prop-types';
 
-const InputBlockNewPeriod = ({admin, type, name, i, value, updateNewPeriodDataState}) => {
+const InputBlockNewPeriod = ({type, name, value, updateNewPeriodDataState}) => {
     return(
         <div className="input-block">
             <input 
@@ -15,8 +16,10 @@ const InputBlockNewPeriod = ({admin, type, name, i, value, updateNewPeriodDataSt
     )
 }
 
-const mapStateToProps = state => ({
-    admin: state.admin
-})
+InputBlockNewPeriod.propTypes = {
+    type: PropTypes.string.isRequired,
+    name: PropTypes.string.isRequired,
+    updateNewPeriodDataState: PropTypes.func.isRequired
+}
 
-export default connect(mapStateToProps, {updateNewPeriodDataState})(InputBlockNewPeriod);
+export default connect(null, {updateNewPeriodDataState})(InputBlockNewPeriod);

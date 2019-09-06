@@ -60,7 +60,6 @@ const mapStateToProps = state => ({
 NewPeriodColumn.propTypes = {
     newPeriodData: PropTypes.object.isRequired,
     priceListId: PropTypes.string.isRequired, 
-    updateNewPeriodDataState: PropTypes.func.isRequired, 
     addPeriod: PropTypes.func.isRequired,
     toggleNewPeriodFormState: PropTypes.func.isRequired
 }

@@ -1,15 +1,14 @@
 import React, { useEffect} from 'react';
 import { connect } from 'react-redux';
 import { setupDashboard } from '../actions/pricelist';
-import { setupAdminUpdatePage } from '../actions/admin';
 import Dashboard from './Dashboard';
+import Spinner from './Spinner';
 import PropTypes from 'prop-types';
 
-const MainApp = ({ pricelist: {loading}, setupDashboard, setupAdminUpdatePage }) => {
+const MainApp = ({ pricelist: {loading}, setupDashboard}) => {
     useEffect(() => {
         setupDashboard();
-        setupAdminUpdatePage();
-    }, [setupDashboard, setupAdminUpdatePage]);
+    }, [setupDashboard]);
 
     if (!loading) { 
         return (
@@ -18,18 +17,17 @@ const MainApp = ({ pricelist: {loading}, setupDashboard, setupAdminUpdatePage })
             </div>
         )
     } else {
-        return ("Wait...");
+        return <Spinner />;
     }
 }
 
 MainApp.propTypes = {
     pricelist: PropTypes.object.isRequired,
-    setupDashboard: PropTypes.func.isRequired,
-    setupAdminUpdatePage: PropTypes.func.isRequired
+    setupDashboard: PropTypes.func.isRequired
 }
  
 const mapStateToProps = state => ({
     pricelist: state.pricelist
 });
 
-export default connect(mapStateToProps, { setupDashboard, setupAdminUpdatePage })(MainApp);
+export default connect(mapStateToProps, { setupDashboard })(MainApp);
