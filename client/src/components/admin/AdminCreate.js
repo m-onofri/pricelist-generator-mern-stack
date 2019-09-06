@@ -118,7 +118,11 @@ const AdminCreate = ({createPricelist, history}) => {
                         className="btn btn-primary my-2" 
                         onClick={(e) => {
                             e.preventDefault();
-                            createPricelist(createData.priceList, history);
+                            const priceList = createData.priceList.map(x => {
+                                x[1].name = createData.name;
+                                return x;
+                            });
+                            createPricelist(priceList, history);
                         }}
                     >Create Pricelist</a> 
                 </div>
