@@ -1,0 +1,4 @@
+{
+    "mongoURI": "mongodb+srv://m-ono_83:3mt8w58l2118hnjJ@cluster0-3cnvm.mongodb.net/mern-app",
+    "jwtSecret": "mysecrettoken"
+}
