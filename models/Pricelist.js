@@ -11,7 +11,7 @@ const PriceListSchema = new Schema({
         type: String,
         required: true
     },
-    periods: [
+    periods: [ 
         {
             periodName: {
                 type: String,
