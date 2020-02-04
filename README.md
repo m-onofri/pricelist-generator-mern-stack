@@ -33,7 +33,7 @@ In your browser, go to http://localhost:3000/, and use the app.
 
 ## ...or watch it live!
 
-You can play the game [here](https://pricelist-generator.herokuapp.com/).
+There is a live version of the app [here](https://pricelist-generator.herokuapp.com/).
 
 
 ## Main Features
